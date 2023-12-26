@@ -3,7 +3,7 @@ dotenv.config()
 
 const Development = {
         'app':{
-                "port": 8000,
+                "port": 3000,
                 "urlsb":"", //url backend
                 "urlsf":"" // url frontend
         },
