@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node ./bin/setup.js",
+    "start": "node ./bin/setup.js",
     "nodemon": "nodemon ./bin/setup.js"
   },
   "dependencies": {
