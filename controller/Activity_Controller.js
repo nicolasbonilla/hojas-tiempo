@@ -7,7 +7,7 @@ const Controller ={
 
         try {
 
-            const result = await ActivityContext.store(req)
+            const result = await ActivityContext.store_activity(req)
             res.json(result)
 
         }
@@ -21,7 +21,7 @@ const Controller ={
 
         try {
 
-            const result = await ActivityContext.update(req)
+            const result = await ActivityContext.update_activity(req)
             res.json(result)
 
         }
