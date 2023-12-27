@@ -50,7 +50,7 @@ const ActivityContext ={
             if(result.status){
                 return result.activity
             }else{
-                return {message:'error en la consulta2'}
+                return {"message":"error al actualizar actividad"}
             }
 
     }
