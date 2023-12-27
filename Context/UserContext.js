@@ -16,8 +16,6 @@ const UserContext ={
         }else{
             return {message:'usuario no encontrado'}
         }
-        // se lee el token del header y se responde con el ususario
-        //return await UserService.index_email(req)
     },
 
     "login":async(req)=>{

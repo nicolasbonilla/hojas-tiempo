@@ -1,12 +1,12 @@
 
-import UserContext from "../Context/UserContext.js"
+import AplicationContext from "../Context/AplicationContext.js"
 
 const Controller ={
     
     'checktoken': async function(req,res,next){
 
         try {
-            const result = await UserContext.checktoken(req)
+            const result = await AplicationContext.checktoken(req)
             res.json(result)
 
         }
@@ -19,7 +19,7 @@ const Controller ={
 
         try {
             // obtener usuario a partir de credenciales
-            const result = await UserContext.login(req)
+            const result = await AplicationContext.login(req)
             res.json(result)
 
         }
