@@ -8,8 +8,8 @@ const ActivityService ={
  
     "store_activity": async function(){
         return await promisePool.query(
-            'INSERT INTO activity VALUES ()',
-            []
+            'INSERT INTO activity (area_id, activity, user_id) VALUES (1,1,"actividad",1)'
+            
         ).then(([ResultSetHeader])=>{
 
             return  { "status": true, "activity":{ "activity_id": ResultSetHeader.insertId }}
@@ -29,7 +29,7 @@ const ActivityService ={
         return await promisePool.query("UPDATE activity SET  area_id = ?, project_id = ?, activity = ?, user_id = ?  WHERE activity_id = ?",
         [area_id, project_id, activity, user_id, activity_id])
         .then(([rows,fields])=>{
-            return { "status": true, "user": rows[0]}
+            return { "status": true, "activity": rows[0]}
         }).catch(
             console.log()
         ).finally(

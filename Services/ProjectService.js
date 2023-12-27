@@ -9,8 +9,7 @@ const ProjectService ={
 
     "store_project": async function(){
         return await promisePool.query(
-            'INSERT INTO project VALUES ()',
-            []
+            'INSERT INTO project (area_id, cost_center_id, name, client_id, project_status_id) VALUES ( 1, 1, "Nombre Proyecto", 1, 1)'
         ).then(([ResultSetHeader])=>{
 
             return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId }}
@@ -30,7 +29,7 @@ const ProjectService ={
         return await promisePool.query("UPDATE project SET  area_id = ?, cost_center_id = ?, name = ?, client_id = ?, project_status_id = ?  WHERE project_id = ?",
         [area_id, cost_center_id, name, client_id, project_status_id, project_id])
         .then(([rows,fields])=>{
-            return { "status": true, "user": rows[0]}
+            return { "status": true, "project": rows[0]}
         }).catch(
             console.log()
         ).finally(

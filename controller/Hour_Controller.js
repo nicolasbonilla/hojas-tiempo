@@ -1,13 +1,13 @@
 
-import ActivityContext from "../Context/AcitivityContext.js"
+import HourContext from "../Context/HourContext.js"
 
 const Controller ={
     
-    'store_activity': async function(req,res,next){
+    'store_hour': async function(req,res,next){
 
         try {
 
-            const result = await ActivityContext.store(req)
+            const result = await HourContext.store(req)
             res.json(result)
 
         }
@@ -17,11 +17,11 @@ const Controller ={
 
     },
     
-    'update_activity': async function(req,res,next){
+    'update_hour': async function(req,res,next){
 
         try {
 
-            const result = await ActivityContext.update(req)
+            const result = await HourContext.update(req)
             res.json(result)
 
         }

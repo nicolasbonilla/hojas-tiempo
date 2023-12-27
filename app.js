@@ -10,6 +10,7 @@ import aplicacion_router from './routes/Aplication_Router.js'
 import users_router from './routes/Users_Router.js'
 import projects_router from './routes/Projects_Router.js'
 import activities_router from './routes/Activities_Router.js'
+import hours_router from './routes/Hours_Router.js'
 
 var app = express()
 var _dirname = './' //ruta directorio actual
@@ -39,6 +40,7 @@ app.use('/public', express.static('./public/')) // ruta estatica para recursos
 app.use('/api/users', users_router)
 app.use('/api/projects', projects_router)
 app.use('/api/activities', activities_router)
+app.use('/api/hours', hours_router)
 //...api usuarios, api proyectos
 
 // catch 404 and forward to error handler
