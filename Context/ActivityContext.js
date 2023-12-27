@@ -33,7 +33,7 @@ const ActivityContext ={
         const result = await ActivityService.store_activity(req)
        
         if(result.status){
-            return result.activity
+            return {"activity":result.activity}
         }else{
             return {message:'error en la consulta'}
         }

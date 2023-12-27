@@ -26,7 +26,7 @@ const ActivityService ={
             
         ).then(([ResultSetHeader])=>{
 
-            return  { "status": true, "activity":{ "activity_id": ResultSetHeader.insertId }}
+            return  { "status": true, "activity":{ "activity_id": ResultSetHeader.insertId, "name":"Actividad" }}
 
         }).catch(
             console.log()
@@ -42,8 +42,8 @@ const ActivityService ={
         const {area_id, project_id, activity, user_id, activity_id} = req.body
         return await promisePool.query("UPDATE activity SET  area_id = ?, project_id = ?, activity = ?, user_id = ?  WHERE activity_id = ?",
         [area_id, project_id, activity, user_id, activity_id])
-        .then(([rows,fields])=>{
-            return { "status": true, "activity": rows[0]}
+        .then(([ResultSetHeader])=>{
+            return {"status": true,"ejecuciones":ResultSetHeader.affectedRows}
         }).catch(
             console.log()
         ).finally(

@@ -34,7 +34,7 @@ const ProjectContext ={
         const result = await ProjectService.store_project(req)
        
         if(result.status){
-            return result.project
+            return {"project":result.project}
         }else{
             return {message:'error en la consulta'}
         }
@@ -49,9 +49,9 @@ const ProjectContext ={
         }
         const result =  await ProjectService.update_project(req)
         if(result.status){
-            return result.project
+            return result
         }else{
-            return {message:'error en la consulta2'}
+            return {"error":300,"message":'error al actualizar proyecto'}
         }
     }
 
