@@ -5,10 +5,24 @@ import mysql_method from "../db/mysql.js"
 const promisePool = mysql_method.pool.promise()
 
 const ActivityService ={
- 
+
+    "index_activities": async function(){
+        return await promisePool.query(
+            'SELECT * FROM activity'
+        ).then(([rows,fields])=>{
+            return  { "status":true, "activities":rows}
+        }).catch(
+            console.log()
+        ).finally(
+           //solo si es necesario
+            // await promisePool.end()
+        )
+    
+    },
+    
     "store_activity": async function(){
         return await promisePool.query(
-            'INSERT INTO activity (area_id, activity) VALUES (1,"actividad")'
+            'INSERT INTO activity (area_id, name) VALUES (1,"actividad")'
             
         ).then(([ResultSetHeader])=>{
 

@@ -5,7 +5,20 @@ import mysql_method from "../db/mysql.js"
 const promisePool = mysql_method.pool.promise()
 
 const ProjectService ={
- 
+
+    "index_projects": async function(){
+        return await promisePool.query(
+            'SELECT * FROM project'
+        ).then(([rows,fields])=>{
+            return  { "status": true, "projects": rows }
+        }).catch(
+            console.log()
+        ).finally(
+           //solo si es necesario
+            // await promisePool.end()
+        )
+    
+    },
 
     "store_project": async function(){
         return await promisePool.query(
