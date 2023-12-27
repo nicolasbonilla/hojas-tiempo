@@ -25,7 +25,7 @@ const ProjectService ={
             'INSERT INTO project (area_id, cost_center_id, name, code, client_id, project_status_id) VALUES ( 1, 1, "Proyecto","code", 1, 1)'
         ).then(([ResultSetHeader])=>{
 
-            return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId, "name":"Proyecto","area_id": 1,"cost_center_id":1,"client_id": 1,"project_status_id":1 }}
+            return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId, "name":"Proyecto","code":"code","area_id": 1,"cost_center_id":1,"client_id": 1,"project_status_id":1 }}
 
         }).catch(
             console.log()
