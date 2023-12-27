@@ -7,7 +7,7 @@ const Controller ={
 
         try {
 
-            const result = await ProjectContext.store(req)
+            const result = await ProjectContext.store_project(req)
             res.json(result)
 
         }
@@ -21,7 +21,7 @@ const Controller ={
 
         try {
 
-            const result = await ProjectContext.update(req)
+            const result = await ProjectContext.update_project(req)
             res.json(result)
 
         }

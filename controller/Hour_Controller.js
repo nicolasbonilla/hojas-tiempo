@@ -7,7 +7,7 @@ const Controller ={
 
         try {
 
-            const result = await HourContext.store(req)
+            const result = await HourContext.store_hour(req)
             res.json(result)
 
         }
@@ -21,7 +21,7 @@ const Controller ={
 
         try {
 
-            const result = await HourContext.update(req)
+            const result = await HourContext.update_hour(req)
             res.json(result)
 
         }

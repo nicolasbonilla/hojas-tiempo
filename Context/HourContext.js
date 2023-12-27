@@ -14,7 +14,7 @@ const HourContext ={
         }
 
         // se guarda el usuario nuevo
-        const result = await HourService.store(req)
+        const result = await HourService.store_hour(req)
        
         if(result.status){
             return result.hour
@@ -30,7 +30,7 @@ const HourContext ={
         if(!check_user.status){
             return check_user
         }
-        const result =  await HourService.update(req)
+        const result =  await HourService.update_hour(req)
         if(result.status){
             return result.hour
         }else{

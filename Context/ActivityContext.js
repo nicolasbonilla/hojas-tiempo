@@ -13,7 +13,7 @@ const ActivityContext ={
         }
 
         // se guarda el usuario nuevo
-        const result = await ActivityService.store(req)
+        const result = await ActivityService.store_activity(req)
        
         if(result.status){
             return result.activity
@@ -29,7 +29,7 @@ const ActivityContext ={
         if(!check_user.status){
             return check_user
         }
-            const result =  await ActivityService.update(req)
+            const result =  await ActivityService.update_activity(req)
             if(result.status){
                 return result.activity
             }else{

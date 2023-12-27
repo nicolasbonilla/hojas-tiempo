@@ -8,7 +8,7 @@ const ActivityService ={
  
     "store_activity": async function(){
         return await promisePool.query(
-            'INSERT INTO activity (area_id, activity, user_id) VALUES (1,1,"actividad",1)'
+            'INSERT INTO activity (area_id, activity) VALUES (1,"actividad")'
             
         ).then(([ResultSetHeader])=>{
 

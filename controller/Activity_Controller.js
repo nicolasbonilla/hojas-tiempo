@@ -1,7 +1,7 @@
 
-import ActivityContext from "../Context/AcitivityContext.js"
+import ActivityContext from "../Context/ActivityContext.js"
 
-const Controller ={
+const Activity_Controller ={
     
     'store_activity': async function(req,res,next){
 
@@ -33,4 +33,4 @@ const Controller ={
 
 }
 
-export default Controller
+export default Activity_Controller

@@ -14,7 +14,7 @@ const ProjectContext ={
         }
 
         // se guarda el usuario nuevo
-        const result = await ProjectService.store(req)
+        const result = await ProjectService.store_project(req)
        
         if(result.status){
             return result.project
@@ -30,7 +30,7 @@ const ProjectContext ={
         if(!check_user.status){
             return check_user
         }
-        const result =  await ProjectService.update(req)
+        const result =  await ProjectService.update_project(req)
         if(result.status){
             return result.project
         }else{
