@@ -37,8 +37,8 @@ app.use('/', default_router)
 app.use('/api', aplicacion_router)
 app.use('/public', express.static('./public/')) // ruta estatica para recursos
 app.use('/api/users', users_router)
-app.use('/api/users', projects_router)
-app.use('/api/users', activities_router)
+app.use('/api/projects', projects_router)
+app.use('/api/activities', activities_router)
 //...api usuarios, api proyectos
 
 // catch 404 and forward to error handler
