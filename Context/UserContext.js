@@ -16,8 +16,6 @@ const UserContext ={
         }else{
             return {message:'usuario no encontrado'}
         }
-        // se lee el token del header y se responde con el ususario
-        //return await UserService.index_email(req)
     },
 
     "login":async(req)=>{
@@ -73,7 +71,7 @@ const UserContext ={
         }else{
             const result =  await UserService.update(req)
             if(result.status){
-                return result.user
+                return result
             }else{
                 return {message:'error en la consulta2'}
             }

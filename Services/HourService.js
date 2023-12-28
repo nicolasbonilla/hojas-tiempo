@@ -5,7 +5,22 @@ import mysql_method from "../db/mysql.js"
 const promisePool = mysql_method.pool.promise()
 
 const HourService ={
- 
+
+    "index_hours": async function(req){
+        const {date, user_id}  = req.body
+        return await promisePool.query(
+            'SELECT * FROM hours WHERE user_id = ? AND date = ?',[user_id, date]    
+        ).then(([rows,fields])=>{
+            return  { "status": true, "hours":rows}
+        }).catch(
+            console.log()
+        ).finally(
+           //solo si es necesario
+            // await promisePool.end()
+        )
+    
+    },
+    
     "store_hour": async function(){
         return await promisePool.query(
             'INSERT INTO hours (project_id, activity_id, hours, date,comments,user_id) VALUES (1,1,1,"2023/12/27","Total",1)'

@@ -36,8 +36,8 @@ app.use(express.static(_dirname + '/public')) // define la carpeta
 
 // ########### rutas definidas ###################
 app.use('/', default_router)
-app.use('/api', aplicacion_router)
 app.use('/public', express.static('./public/')) // ruta estatica para recursos
+app.use('/api/aplication', aplicacion_router)
 app.use('/api/users', users_router)
 app.use('/api/projects', projects_router)
 app.use('/api/activities', activities_router)
