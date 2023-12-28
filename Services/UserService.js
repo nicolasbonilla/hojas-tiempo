@@ -9,7 +9,7 @@ const UserService ={
     'index_email':async function(req){
 
         const { email } = req.body
-        return await promisePool.query("SELECT user_id, email, name, password FROM users WHERE email = ?",[email])
+        return await promisePool.query("SELECT user_id, email, name, password, area_id FROM users WHERE email = ?",[email])
         .then(([rows,fields])=>{
             return { "status": true, "user": rows[0]}
         }).catch(
@@ -24,7 +24,7 @@ const UserService ={
 
     'index_id':async function(user_id){
 
-        return await promisePool.query("SELECT user_id, email, name FROM users WHERE user_id = ?",[user_id])
+        return await promisePool.query("SELECT user_id, email, name, area_id FROM users WHERE user_id = ?",[user_id])
         .then(([rows,fields])=>{
             return { "status": true, "user": rows[0]}
 
