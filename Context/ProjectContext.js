@@ -30,7 +30,8 @@ const ProjectContext ={
             return check_user
         }
 
-        // se guarda el usuario nuevo
+        req.body.user_id = check_user.user_id
+
         const result = await ProjectService.store_project(req)
        
         if(result.status){

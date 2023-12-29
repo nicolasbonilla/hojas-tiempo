@@ -19,14 +19,12 @@ const ProjectService ={
         )
     
     },
-
-    "store_project": async function(){
+    "store_project": async function(req){
+        const { user_id } = req.body
         return await promisePool.query(
-            'INSERT INTO project (area_id, cost_center_id, name, code, client_id, project_status_id) VALUES ( 1, 1, "Proyecto","code", 1, 1)'
+            'INSERT INTO project (area_id, cost_center_id, name, code, client_id, project_status_id, user_id) VALUES ( 1, 1, "Proyecto","code", 1, 1,?)',[user_id]
         ).then(([ResultSetHeader])=>{
-
-            return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId, "name":"Proyecto","code":"code","area_id": 1,"cost_center_id":1,"client_id": 1,"project_status_id":1 }}
-
+            return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId, "name":"Proyecto","code":"code","area_id": 1,"cost_center_id":1,"client_id": 1,"project_status_id":1,"user_id":user_id }}
         }).catch(
             console.log()
         ).finally(
@@ -35,12 +33,11 @@ const ProjectService ={
         )
     
     },
-
     'update_project':async function(req){
 
-        const {area_id, cost_center_id, name, code, client_id, project_status_id, project_id} = req.body
-        return await promisePool.query("UPDATE project SET  area_id = ?, cost_center_id = ?, name = ?, code = ?, client_id = ?, project_status_id = ?  WHERE project_id = ?",
-        [area_id, cost_center_id, name, code, client_id, project_status_id, project_id])
+        const {area_id, cost_center_id, name, code, client_id, project_status_id, user_id, project_id } = req.body
+        return await promisePool.query("UPDATE project SET  area_id = ?, cost_center_id = ?, name = ?, code = ?, client_id = ?, project_status_id = ?, user_id = ? WHERE project_id = ?",
+        [area_id, cost_center_id, name, code, client_id, project_status_id, user_id, project_id])
         .then(([ResultSetHeader])=>{
             return { "status": true, "ejecuciones": ResultSetHeader.affectedRows}
         }).catch(
@@ -51,6 +48,7 @@ const ProjectService ={
             )
 
     }
+
 }
 
 export default ProjectService
