@@ -17,11 +17,11 @@ const Controller ={
 
     },
     
-    'store_hour': async function(req,res,next){
+    'store_hours': async function(req,res,next){
 
         try {
 
-            const result = await HourContext.store_hour(req)
+            const result = await HourContext.store_hours(req)
             res.json(result)
 
         }

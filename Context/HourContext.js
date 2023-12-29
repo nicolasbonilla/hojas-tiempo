@@ -20,7 +20,7 @@ const HourContext ={
         }
     },
 
-    "store_hour":async(req)=>{
+    "store_hours":async(req)=>{
 
         // validar con jwt el usuario actual
         const check_user = utilities.jwt_check(req)
@@ -28,14 +28,23 @@ const HourContext ={
             return check_user
         }
 
-        // se guarda el usuario nuevo
-        const result = await HourService.store_hour(req)
-       
-        if(result.status){
-            return result.hour
-        }else{
-            return {message:'error en la consulta'}
+        let registros = req.body.hours || []
+
+        let hours = []
+        for (let index = 0; index < registros.length; index++){
+
+            let element = registros[index]
+            element.user_id = check_user.user_id
+            const result = await HourService.store_hour(element)
+            if(result.status){
+                hours.push(result.hour)
+            }else{
+                return {message:'error al crear un registro de tiempo'}
+            }
+
         }
+
+        return{"status": true, "hours": hours}
     },
 
     "update_hour":async (req)=>{

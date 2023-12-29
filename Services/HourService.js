@@ -9,7 +9,7 @@ const HourService ={
     "index_hours": async function(req){
         const {date, user_id}  = req.body
         return await promisePool.query(
-            'SELECT * FROM hours WHERE user_id = ? AND date = ?',[user_id, date]    
+            'SELECT *, DATE_FORMAT(date,"%Y-%m-%d") AS date FROM hours WHERE user_id = ? AND date = ?',[user_id, date]    
         ).then(([rows,fields])=>{
             return  { "status": true, "hours":rows}
         }).catch(
@@ -18,28 +18,21 @@ const HourService ={
            //solo si es necesario
             // await promisePool.end()
         )
-    
     },
-    
-    "store_hour": async function(){
+    "store_hour": async function(params){
+        const { project_id, activity_id, hours, date,comments,user_id } = params
         return await promisePool.query(
-            'INSERT INTO hours (project_id, activity_id, hours, date,comments,user_id) VALUES (1,1,1,"2023/12/27","Total",1)'
-            
+            'INSERT INTO hours (project_id, activity_id, hours, date,comments,user_id) VALUES (?,?,?,?,?,?)',[project_id,activity_id,hours,date,comments,user_id]
         ).then(([ResultSetHeader])=>{
-
-            return  { "status": true, "hour":{ "hours_id": ResultSetHeader.insertId }}
-
+            return  { "status": true, "hour":{ "hours_id": ResultSetHeader.insertId, ...params }}
         }).catch(
             console.log()
         ).finally(
            //solo si es necesario
             // await promisePool.end()
         )
-    
     },
-
     'update_hour':async function(req){
-
         const {project_id, activity, hours, date, comments, user_id, hours_id} = req.body
         return await promisePool.query("UPDATE hours SET  project_id = ?, activity = ?, hours = ?, date = ?, comments = ?, user_id = ?  WHERE hours_id = ?",
         [project_id, activity,hours, date, comments, user_id, hours_id])
@@ -49,9 +42,8 @@ const HourService ={
             console.log()
         ).finally(
             //solo si es necesario
-                // await promisePool.end()
-            )
-
+            // await promisePool.end()
+        )
     }
 }
 
