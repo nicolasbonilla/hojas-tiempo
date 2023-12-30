@@ -58,7 +58,7 @@ const HourContext ={
         if(result.status){
             return result.hour
         }else{
-            return {message:'error en la consulta2'}
+            return {message:'error al actulizar'}
         }
     },
 
@@ -69,11 +69,11 @@ const HourContext ={
         if(!check_user.status){
             return check_user
         }
-        const result =  await HourService.update_hour(req)
+        const result =  await HourService.delete_hour(req)
         if(result.status){
-            return result.hour
+            return result
         }else{
-            return {message:'error en la consulta2'}
+            return {message:'error al eliminar un registro de hora'}
         }
     }
 

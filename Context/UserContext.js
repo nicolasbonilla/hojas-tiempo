@@ -34,6 +34,24 @@ const UserContext ={
         }
     },
 
+    "index_users":async(req)=>{
+
+        // validar con jwt el usuario actual
+        const check_user = utilities.jwt_check(req)
+        if(!check_user.status){
+            return check_user
+        }
+
+        // se guarda el usuario nuevo
+        const result = await UserService.index_users(req)
+       
+        if(result.status){
+            return result
+        }else{
+            return {message:'error en la consulta usuarios'}
+        }
+    },
+
     "store":async(req)=>{
 
         // validar con jwt el usuario actual
@@ -48,7 +66,7 @@ const UserContext ={
         if(result.status){
             return result.user
         }else{
-            return {message:'error en la consulta'}
+            return {message:'error en la consulta guardar usuario'}
         }
     },
 
@@ -66,14 +84,14 @@ const UserContext ={
             if(result.status){
                 return result.user
             }else{
-                return {message:'error en la consulta1'}
+                return {message:'error en la consulta actualizar usuario completo'}
             }
         }else{
             const result =  await UserService.update(req)
             if(result.status){
                 return result
             }else{
-                return {message:'error en la consulta2'}
+                return {message:'error en la consulta actualizar usuario'}
             }
         }
     }

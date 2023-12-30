@@ -5,7 +5,18 @@ import mysql_method from "../db/mysql.js"
 const promisePool = mysql_method.pool.promise()
 
 const UserService ={
-    
+    'index_users':async function(req){
+
+        return await promisePool.query("SELECT user_id,email,name,date_of_admission,work_days_id,salary,permission_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id, CASE TRUE WHEN TRUE THEN '' END AS password FROM users")
+        .then(([rows,fields])=>{
+            return { "status": true, "users": rows}
+        }).catch(
+            console.log()
+        ).finally(
+            //solo si es necesario
+            // await promisePool.end()
+        )
+    },    
     'index_email':async function(req){
 
         const { email } = req.body
@@ -16,12 +27,9 @@ const UserService ={
             console.log()
         ).finally(
             //solo si es necesario
-             // await promisePool.end()
-         )
-    
+            // await promisePool.end()
+        )
     },
-
-
     'index_id':async function(user_id){
 
         return await promisePool.query("SELECT user_id, email, name, area_id FROM users WHERE user_id = ?",[user_id])
@@ -36,8 +44,6 @@ const UserService ={
          )
     
     },
-
-
     "store": async function(req){
         const { email, password, work_days_id } = req.body
         
@@ -56,7 +62,6 @@ const UserService ={
         )
     
     },
-
     'update_full':async function(req){
 
         const {email, password, name, date_of_admission, work_days_id, salary, permission_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, user_id } = req.body
@@ -71,7 +76,6 @@ const UserService ={
             // await promisePool.end()
         )
     },
-
     'update':async function(req){
 
         const {email, name, date_of_admission, work_days_id, salary, permission_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, user_id } = req.body
@@ -83,8 +87,8 @@ const UserService ={
             console.log()
         ).finally(
             //solo si es necesario
-                // await promisePool.end()
-            )
+            // await promisePool.end()
+        )
 
     }
 }

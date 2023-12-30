@@ -44,6 +44,19 @@ const HourService ={
             //solo si es necesario
             // await promisePool.end()
         )
+    },
+    'delete_hour':async function(req){
+        const { hours_id } = req.body
+        return await promisePool.query(
+            "DELETE FROM hours WHERE hours_id = ?",[hours_id]
+        ).then(([ResultSetHeader])=>{
+            return { "status":true, "ejecuciones": ResultSetHeader.affectedRows }
+        }).catch(
+            console.log()
+        ).finally(
+            //solo si es necesario
+            // await promisePool.end()
+        )
     }
 }
 
