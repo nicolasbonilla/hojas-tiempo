@@ -15,11 +15,11 @@ const Controller ={
 
     },
     
-    'store': async function(req,res,next){
+    'store_user': async function(req,res,next){
 
         try {
 
-            const result = await UserContext.store(req)
+            const result = await UserContext.store_user(req)
             res.json(result)
 
         }
@@ -29,11 +29,11 @@ const Controller ={
 
     },
     
-    'update': async function(req,res,next){
+    'update_user': async function(req,res,next){
 
         try {
 
-            const result = await UserContext.update(req)
+            const result = await UserContext.update_user(req)
             res.json(result)
 
         }

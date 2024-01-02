@@ -52,7 +52,7 @@ const UserContext ={
         }
     },
 
-    "store":async(req)=>{
+    "store_user":async(req)=>{
 
         // validar con jwt el usuario actual
         const check_user = utilities.jwt_check(req)
@@ -64,13 +64,13 @@ const UserContext ={
         const result = await UserService.store(req)
        
         if(result.status){
-            return result.user
+            return result
         }else{
             return {message:'error en la consulta guardar usuario'}
         }
     },
 
-    "update":async (req)=>{
+    "update_user":async (req)=>{
 
         // validar con jwt el usuario actual
         const check_user = utilities.jwt_check(req)
