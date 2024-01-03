@@ -48,7 +48,7 @@ const ActivityContext ={
         }
             const result =  await ActivityService.update_activity(req)
             if(result.status){
-                return result.activity
+                return result
             }else{
                 return {"message":"error al actualizar actividad"}
             }

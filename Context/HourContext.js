@@ -19,7 +19,23 @@ const HourContext ={
             return {message:'error en la consulta'}
         }
     },
+    "index_hours_month":async(req)=>{
 
+        // validar con jwt el usuario actual
+        const check_user = utilities.jwt_check(req)
+        if(!check_user.status){
+            return check_user
+        }
+
+        req.body.user_id = check_user.user_id
+        const result = await HourService.index_hours_month(req)
+       
+        if(result.status){
+            return result
+        }else{
+            return {message:'error en la consulta'}
+        }
+    },
     "store_hours":async(req)=>{
 
         // validar con jwt el usuario actual
@@ -46,7 +62,6 @@ const HourContext ={
 
         return{"status": true, "hours": hours}
     },
-
     "update_hour":async (req)=>{
 
         // validar con jwt el usuario actual
@@ -61,7 +76,6 @@ const HourContext ={
             return {message:'error al actulizar'}
         }
     },
-
     "delete_hour":async (req)=>{
 
         // validar con jwt el usuario actual

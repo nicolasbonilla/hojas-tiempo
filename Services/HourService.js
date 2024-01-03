@@ -19,6 +19,19 @@ const HourService ={
             // await promisePool.end()
         )
     },
+    "index_hours_month": async function(req){
+        const {date, user_id}  = req.body
+        return await promisePool.query(
+            'SELECT *, DATE_FORMAT(date,"%Y-%m-%d") AS date, DATE_FORMAT(date,"%d") AS day FROM hours WHERE DATE_FORMAT(date,"%Y-%m") = DATE_FORMAT(?,"%Y-%m") AND user_id = ?',[date,user_id]    
+        ).then(([rows,fields])=>{
+            return  { "status": true, "hours":rows}
+        }).catch(
+            console.log()
+        ).finally(
+           //solo si es necesario
+            // await promisePool.end()
+        )
+    },
     "store_hour": async function(params){
         const { project_id, activity_id, hours, date,comments,user_id } = params
         return await promisePool.query(
