@@ -5,6 +5,7 @@ import mysql_method from "../db/mysql.js"
 const promisePool = mysql_method.pool.promise()
 
 const UserService ={
+
     'index_users':async function(req){
 
         return await promisePool.query("SELECT user_id,email,name,DATE_FORMAT(date_of_admission,'%Y/%m/%d') AS date_of_admission, work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id, CASE TRUE WHEN TRUE THEN '' END AS password FROM users")
@@ -21,7 +22,21 @@ const UserService ={
     'index_email':async function(req){
 
         const { email } = req.body
-        return await promisePool.query("SELECT user_id, email, name, password, area_id FROM users WHERE email = ?",[email])
+        return await promisePool.query(
+        `
+        SELECT 
+        u.user_id,
+        u.role_id,
+        u.email,
+        u.name,
+        u.area_id,
+        u.password,
+        GROUP_CONCAT(roles_permission.permission_id) as permissions 
+        FROM users u
+        JOIN roles_permission
+        ON u.email = ? AND u.role_id = roles_permission.role_id  
+        `    
+        ,[email])
         .then(([rows,fields])=>{
             return { "status": true, "user": rows[0]}
         }).catch(
@@ -34,7 +49,21 @@ const UserService ={
     },
     'index_id':async function(user_id){
 
-        return await promisePool.query("SELECT user_id, email, name, area_id FROM users WHERE user_id = ?",[user_id])
+        return await promisePool.query(
+        `
+        SELECT 
+        u.user_id,
+        u.role_id,
+        u.email,
+        u.name,
+        u.area_id,
+        GROUP_CONCAT(roles_permission.permission_id) as permissions 
+        FROM users u
+        JOIN roles_permission
+        ON u.user_id = ? AND u.role_id = roles_permission.role_id 
+        GROUP BY u.user_id
+        `
+        ,[user_id])
         .then(([rows,fields])=>{
             return { "status": true, "user": rows[0]}
 

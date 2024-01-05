@@ -2,7 +2,7 @@ import env from './env.js'
 
 const Config = {
 
-    'version': "1.0.0.0 03-01-2024 18:28",
+    'version': "1.0.0.0 05-01-2024 10:50",
     // development o production
     'status': 'development',
 

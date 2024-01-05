@@ -4,25 +4,19 @@ import bcrypt from 'bcrypt'
 const utilities = { 
 
     token: (user_id) => {
-   
         let data = {
             time: Date(),
             user_id: user_id,
         }
-       
         const token = jwt.sign(data, 'Axon_time')
-       
         return token
     },
 
     
 
     bcrypt_check: (string,hash) => {
-        console.log(string, hash)
         let status = false
-    
         status = bcrypt.compareSync(string, hash)
-    
         if(!status){
             return  {'error':401 ,'message': 'Wrong passsword!'}
         }else{
@@ -42,10 +36,8 @@ const utilities = {
             const verified = jwt.verify(token, jwtSecretKey)
 
             if(verified){
-
                 //return res.send("Successfully Verified")
                 return {'status': true, 'user_id': verified.user_id}
-
             }else{
                 // Access Denied
                 //return res.status(401).send(error)
