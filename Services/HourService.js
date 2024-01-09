@@ -22,7 +22,7 @@ const HourService ={
     "index_hours_month": async function(req){
         const {date, user_id}  = req.body
         return await promisePool.query(
-            'SELECT *, DATE_FORMAT(date,"%Y-%m-%d") AS date, DATE_FORMAT(date,"%d") AS day FROM hours WHERE DATE_FORMAT(date,"%Y-%m") = DATE_FORMAT(?,"%Y-%m") AND user_id = ?',[date,user_id]    
+            'SELECT *, DATE_FORMAT(date,"%Y-%m-%d") AS date FROM hours WHERE DATE_FORMAT(date,"%Y-%m") = DATE_FORMAT(?,"%Y-%m") AND user_id = ?',[date,user_id]    
         ).then(([rows,fields])=>{
             return  { "status": true, "hours":rows}
         }).catch(
@@ -63,7 +63,7 @@ const HourService ={
         return await promisePool.query(
             "DELETE FROM hours WHERE hours_id = ?",[hours_id]
         ).then(([ResultSetHeader])=>{
-            return { "status":true, "ejecuciones": ResultSetHeader.affectedRows }
+            return { "status":true, "executed": ResultSetHeader.affectedRows }
         }).catch(
             console.log()
         ).finally(
