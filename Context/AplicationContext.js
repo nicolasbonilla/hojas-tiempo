@@ -10,7 +10,7 @@ const AplicationContext ={
         }
 
         const result = await UserService.index_id(check_user.user_id)
-        if(result.status){
+        if(result.user.user_id){
             const permissions = result.user.permissions.split(",").map((p)=>{
                 try {
                     let permission = Number(p)
@@ -22,13 +22,18 @@ const AplicationContext ={
             const user = { ...result.user, "permissions": permissions }
             return {"user":user}
         }else{
-            return {"error":404, "message":'usuario no encontrado'}
+            return {"error":404, "message":'Usuario no encontrado!'}
         }
     },
 
     "login":async(req)=>{
 
         const result = await UserService.index_email(req)
+        
+        if(!result.user.user_id){
+            return  {'error':400,'message': 'Usuario no encontrado!'}
+        }
+
         const validacion_password = utilities.bcrypt_check(req.body.password, result.user.password);
         
         if(validacion_password.status){
@@ -47,7 +52,7 @@ const AplicationContext ={
             return {"user": user, "token":token}
                
         }else{
-            return  {'error':401 ,'message': 'Wrong passsword!'}
+            return  {'error':401 ,'message': 'Contraseña incorrecta!'}
         }
     }
 
