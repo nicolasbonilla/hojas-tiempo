@@ -14,6 +14,7 @@ import hours_router from './routes/Hours_Router.js'
 import area_router from './routes/Area_Router.js'
 import clients_router from './routes/Clients_Router.js'
 import jobs_router from './routes/Jobs_Router.js'
+import teams_router from './routes/Team_Router.js'
 
 var app = express()
 var _dirname = './' //ruta directorio actual
@@ -47,7 +48,7 @@ app.use('/api/hours', hours_router)
 app.use('/api/area', area_router)
 app.use('/api/clients', clients_router)
 app.use('/api/jobs', jobs_router)
-//...api usuarios, api proyectos
+app.use('/api/teams', teams_router)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
