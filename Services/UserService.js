@@ -84,8 +84,10 @@ const UserService ={
             [email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password]
         ).then(([ResultSetHeader])=>{
             return  { "status": true, "user":{ "user_id": ResultSetHeader.insertId,...req.body }}
-        }).catch(
-            console.log()
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }
         ).finally(
            //solo si es necesario
             // await promisePool.end()

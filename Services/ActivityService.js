@@ -20,19 +20,21 @@ const ActivityService ={
     
     },
     
-    "store_activity": async function(){
+    "store_activity": async function(req){
+
+        const { area_id,name } = req.body
+
         return await promisePool.query(
-            'INSERT INTO activity (area_id, name) VALUES (1,"actividad")'
-            
+            'INSERT INTO activity (area_id, name) VALUES (?,?)',[area_id,name]            
         ).then(([ResultSetHeader])=>{
-
-            return  { "status": true, "activity":{ "activity_id": ResultSetHeader.insertId,"area_id":1,"name":"Actividad" }}
-
-        }).catch(
-            console.log()
+            return  { "status": true, "activity":{ "activity_id": ResultSetHeader.insertId,"area_id": area_id,"name": name }}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status": false}
+        }
         ).finally(
            //solo si es necesario
-            // await promisePool.end()
+           // await promisePool.end()
         )
     
     },

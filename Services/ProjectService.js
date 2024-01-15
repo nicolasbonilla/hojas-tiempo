@@ -20,13 +20,15 @@ const ProjectService ={
     
     },
     "store_project": async function(req){
-        const { user_id } = req.body
+        const { user_id, name, code } = req.body
         return await promisePool.query(
-            'INSERT INTO project (area_id, cost_center_id, name, code, client_id, project_status_id, user_id) VALUES ( 1, 1, "Proyecto","code", 1, 1,?)',[user_id]
+            'INSERT INTO project (area_id, cost_center_id, name, code, client_id, project_status_id, user_id) VALUES ( 1, 1, ?,?, 1, 1,?)',[name,code,user_id]
         ).then(([ResultSetHeader])=>{
-            return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId, "name":"Proyecto","code":"code","area_id": 1,"cost_center_id":1,"client_id": 1,"project_status_id":1,"user_id":user_id }}
-        }).catch(
-            console.log()
+            return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId,"name":name,"code":code,"area_id": 1,"cost_center_id":1,"client_id": 1,"project_status_id":1,"user_id":user_id }}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }
         ).finally(
            //solo si es necesario
             // await promisePool.end()
