@@ -2,23 +2,16 @@ import env from './env.js'
 
 const Config = {
 
-    'version': "1.0.0.0 15-01-2024 12:31",
+    'version': "1.0.0.0 16-01-2024 12:00",
     // development o production
-    'status': 'development',
+    'status': process.env.ENVIRONMENT || 'development',
 
     /**
      * @param {String} key
      * @param {String} value
      */
     'get': function(key,value){
-
-        if(this.status === 'development'){
-            return env.development[key][value]
-        }
-
-        if (this.status === 'production'){
-            return env.production[key][value]
-        }
+        return env[this.status][key][value]
     }
 
 }

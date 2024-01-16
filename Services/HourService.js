@@ -46,13 +46,15 @@ const HourService ={
         )
     },
     'update_hour':async function(req){
-        const {project_id, activity, hours, date, comments, user_id, hours_id} = req.body
-        return await promisePool.query("UPDATE hours SET  project_id = ?, activity = ?, hours = ?, date = ?, comments = ?, user_id = ?  WHERE hours_id = ?",
-        [project_id, activity,hours, date, comments, user_id, hours_id])
-        .then(([rows,fields])=>{
-            return { "status": true, "hour": rows[0]}
-        }).catch(
-            console.log()
+        const {project_id, activity_id, hours, date, comments, user_id, hours_id} = req.body
+        return await promisePool.query("UPDATE hours SET  project_id = ?, activity_id = ?, hours = ?, date = ?, comments = ?, user_id = ?  WHERE hours_id = ?",
+        [project_id, activity_id,hours, date, comments, user_id, hours_id])
+        .then(([ResultSetHeader])=>{
+            return { "status": true, "executed": ResultSetHeader.affectedRows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }
         ).finally(
             //solo si es necesario
             // await promisePool.end()

@@ -55,7 +55,7 @@ const HourContext ={
             if(result.status){
                 hours.push(result.hour)
             }else{
-                return {message:'error al crear un registro de tiempo'}
+                return {"status":false,message:'error al crear un registro de tiempo'}
             }
 
         }
@@ -71,9 +71,9 @@ const HourContext ={
         }
         const result =  await HourService.update_hour(req)
         if(result.status){
-            return result.hour
+            return result 
         }else{
-            return {message:'error al actulizar'}
+            return {"status":false, message:'error al actualizar un registro de tiempo'}
         }
     },
     "delete_hour":async (req)=>{
