@@ -30,11 +30,18 @@ const HourContext ={
         req.body.user_id = check_user.user_id
         const result = await HourService.index_hours_month(req)
        
-        if(result.status){
-            return result
-        }else{
-            return {message:'error en la consulta'}
+        req.body = {...req.body, date: req.body.old }
+        const olds = await HourService.index_hours_month(req)
+        
+        req.body = {...req.body, date: req.body.prev }
+        const prevs = await HourService.index_hours_month(req)
+       
+        if(!result.status || !olds.status || !prevs.status ){
+            return {"status": false, message:'error en la consulta'}
         }
+        
+        return {"status":true,"hours": result.hours, "old": olds.hours, "prev": prevs.hours }
+
     },
     "store_hours":async(req)=>{
 
