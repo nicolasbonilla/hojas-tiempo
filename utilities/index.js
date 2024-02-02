@@ -12,13 +12,11 @@ const utilities = {
         return token
     },
 
-    
-
     bcrypt_check: (string,hash) => {
         let status = false
         status = bcrypt.compareSync(string, hash)
         if(!status){
-            return  {'error':401 ,'message': 'Wrong passsword!'}
+            return  {'error':401 ,'message': 'Wrong password!'}
         }else{
             return  {'status': status }
         }

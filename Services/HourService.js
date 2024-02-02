@@ -34,6 +34,29 @@ const HourService ={
             // await promisePool.end()
         )
     },
+    "index_hours_between": async function(req){
+        const {start, end}  = req.body.range
+        return await promisePool.query(
+            `
+            SELECT CAST(COALESCE(SUM(hours.hours),0)AS UNSIGNED) AS total, users.user_id, users.area_id, users.name, users.team_id
+            FROM users
+            LEFT JOIN hours ON users.user_id = hours.user_id
+            AND date BETWEEN ? AND ?
+            GROUP BY users.user_id
+            ORDER BY total ASC
+            `
+            ,[start,end]
+        ).then(([rows,fields])=>{
+            return  { "status": true, "hours":rows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status": false}
+        }
+        ).finally(
+           //solo si es necesario
+            // await promisePool.end()
+        )
+    },
     "store_hour": async function(params){
         const { project_id, activity_id, hours, date,comments,user_id } = params
         const _date = new Date(date)

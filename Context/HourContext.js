@@ -43,6 +43,23 @@ const HourContext ={
         return {"status":true,"hours": result.hours, "old": olds.hours, "prev": prevs.hours }
 
     },
+    "index_hours_between":async(req)=>{
+
+        //validar con jwt el usuario actual
+        const check_user = utilities.jwt_check(req)
+        if(!check_user.status){
+            return check_user
+        }
+
+        const result = await HourService.index_hours_between(req)
+       
+        if(result.status){
+            return result
+        }else{
+            return {message:'¡error al consultar registros de tiempos por rango!'}
+        }
+
+    },
     "store_hours":async(req)=>{
 
         // validar con jwt el usuario actual
