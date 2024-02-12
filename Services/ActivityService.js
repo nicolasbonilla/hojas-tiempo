@@ -20,9 +20,9 @@ const ActivityService ={
     
     },
     
-    "store_activity": async function(req){
+    "store_activity": async function(params){
 
-        const { area_id,name } = req.body
+        const { area_id,name } = params
 
         return await promisePool.query(
             'INSERT INTO activity (area_id, name) VALUES (?,?)',[area_id,name]            
@@ -39,9 +39,9 @@ const ActivityService ={
     
     },
 
-    'update_activity':async function(req){
+    'update_activity':async function(params){
 
-        const {area_id, name, activity_id} = req.body
+        const {area_id, name, activity_id} = params
         return await promisePool.query("UPDATE activity SET  area_id = ?, name = ? WHERE activity_id = ?",
         [area_id, name, activity_id])
         .then(([ResultSetHeader])=>{

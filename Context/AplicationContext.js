@@ -1,15 +1,12 @@
 import UserService from "../Services/UserService.js"
-import utilities from "../utilities/index.js"
+import BCRYPT from "../utilities/bcrypt.js"
+import JWT from "../utilities/jwt.js"
+
 const AplicationContext ={
 
     "checktoken":async(req)=>{
 
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
-
-        const result = await UserService.index_id(check_user.user_id)
+        const result = await UserService.index_id({"user_id": req.authenticated.validation.user_id})
         if(result.user.user_id){
             const permissions = result.user.permissions.split(",").map((p)=>{
                 try {
@@ -28,17 +25,17 @@ const AplicationContext ={
 
     "login":async(req)=>{
 
-        const result = await UserService.index_email(req)
+        const result = await UserService.index_email(req.body)
         
         if(!result.user.user_id){
             return  {'error':400,'message': 'Usuario no encontrado!'}
         }
 
-        const validacion_password = utilities.bcrypt_check(req.body.password, result.user.password);
+        const validacion_password = BCRYPT.check(req.body.password, result.user.password);
         
         if(validacion_password.status){
             // retorna user y token a partir de credenciales
-            const token = utilities.token(result.user.user_id)
+            const token = JWT.generate(result.user.user_id)
             const permissions = result.user.permissions.split(",").map((p)=>{
                 try {
                     let permission = Number(p)

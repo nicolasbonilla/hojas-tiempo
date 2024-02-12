@@ -1,56 +1,56 @@
 
-import HourContext from "../Context/HourContext.js"
+import { Hours } from "../Context/HourContext.js"
 
 const Controller ={
 
-    'index_hours': async function(req,res,next){
+    'indexHours': async function(req,res,next){
         try {
-            const result = await HourContext.index_hours(req)
+            const result = await Hours.indexHours(req)
             res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
     },
-    'index_hours_month': async function(req,res,next){
+    'indexHoursMonth': async function(req,res,next){
         try {
-            const result = await HourContext.index_hours_month(req)
+            const result = await Hours.indexHoursMonth(req)
             res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
     },
-    'index_hours_between':async function(req,res,next){
+    'indexHoursBetween':async function(req,res,next){
         try {
-            const result = await HourContext.index_hours_between(req)
+            const result = await Hours.indexHoursBetween(req)
             res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
     },
-    'store_hours': async function(req,res,next){
+    'storeHours': async function(req,res,next){
         try {
-            const result = await HourContext.store_hours(req)
+            const result = await Hours.storeHours(req)
             res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
     },
-    'update_hour': async function(req,res,next){
+    'updateHour': async function(req,res,next){
         try {
-            const result = await HourContext.update_hour(req)
+            const result = await Hours.updateHour(req)
             res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
     },
-    'delete_hour': async function(req,res,next){
+    'deleteHour': async function(req,res,next){
         try {
-            const result = await HourContext.delete_hour(req)
+            const result = await Hours.deleteHour(req)
             res.json(result)
         }
         catch (error) {

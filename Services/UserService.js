@@ -6,7 +6,7 @@ const promisePool = mysql_method.pool.promise()
 
 const UserService ={
 
-    'index_users':async function(req){
+    'index_users':async function(){
 
         return await promisePool.query("SELECT user_id,email,name,DATE_FORMAT(date_of_admission,'%Y/%m/%d') AS date_of_admission, work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id, CASE TRUE WHEN TRUE THEN '' END AS password FROM users")
         .then(([rows,fields])=>{
@@ -19,9 +19,9 @@ const UserService ={
         )
 
     },    
-    'index_email':async function(req){
+    'index_email':async function(params){
 
-        const { email } = req.body
+        const { email } = params
         return await promisePool.query(
         `
         SELECT 
@@ -47,7 +47,9 @@ const UserService ={
         )
 
     },
-    'index_id':async function(user_id){
+    'index_id':async function(params){
+
+        const { user_id } = params
 
         return await promisePool.query(
         `
@@ -75,15 +77,15 @@ const UserService ={
         )
     
     },
-    "store": async function(req){
+    "store_user": async function(params){
 
-        const {email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password} = req.body
+        const {email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password} = params
 
         return await promisePool.query(
             'INSERT INTO users (email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password]
         ).then(([ResultSetHeader])=>{
-            return  { "status": true, "user":{ "user_id": ResultSetHeader.insertId,...req.body }}
+            return  { "status": true, "user":{ "user_id": ResultSetHeader.insertId,...params }}
         }).catch((err)=>{
             console.log(err)
             return {"status":false}
@@ -94,30 +96,32 @@ const UserService ={
         )
     
     },
-    'update_full':async function(req){
+    'update_full':async function(params){
 
-        const {team_id, email, password, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id } = req.body
+        const {team_id, email, password, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id } = params
         return await promisePool.query("UPDATE users SET team_id = ?, email = ?, password = ?, name = ?, date_of_admission = ?, work_days_id = ?, salary = ?, role_id = ?, job_title_id = ?, area_id = ?, work_modality_id = ?, location_id = ?, status_id = ?, active = ?, phone_number = ? WHERE user_id = ?",
         [team_id, email, password, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id])
         .then(([ResultSetHeader])=>{
             return { "status": true, "ejecuciones": ResultSetHeader.affectedRows}
-        }).catch(
-            (err) => console.log(err)
-        ).finally(
+        }).catch((err)=>{
+            console.log(err)
+            return {"status": false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )
     },
-    'update':async function(req){
+    'update':async function(params){
 
-        const {team_id, email, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id } = req.body
+        const {team_id, email, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id } = params
         return await promisePool.query("UPDATE users SET team_id = ?, email = ?, name = ?, date_of_admission = ?, work_days_id = ?, salary = ?, role_id = ?, job_title_id = ?, area_id = ?, work_modality_id = ?, location_id = ?, status_id = ?, active = ?, phone_number = ? WHERE user_id = ?",
         [team_id, email, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id])
         .then(([ResultSetHeader])=>{
             return { "status": true, "ejecuciones": ResultSetHeader.affectedRows}
-        }).catch(
-            console.log()
-        ).finally(
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )

@@ -19,12 +19,12 @@ const ProjectService ={
         )
     
     },
-    "store_project": async function(req){
-        const { user_id, name, code } = req.body
+    "store_project": async function(params){
+        const { user_id, name, code } = params
         return await promisePool.query(
             'INSERT INTO project (area_id, cost_center_id, name, code, client_id, project_status_id, user_id) VALUES ( 1, 1, ?,?, 1, 1,?)',[name,code,user_id]
         ).then(([ResultSetHeader])=>{
-            return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId,"name":name,"code":code,"area_id": 1,"cost_center_id":1,"client_id": 1,"project_status_id":1,"user_id":user_id }}
+            return  { "status": true, "project":{ "project_id": ResultSetHeader.insertId, ...params }}
         }).catch((err)=>{
             console.log(err)
             return {"status":false}
@@ -35,16 +35,17 @@ const ProjectService ={
         )
     
     },
-    'update_project':async function(req){
+    'update_project':async function(params){
 
-        const {area_id, cost_center_id, name, code, client_id, project_status_id, user_id, project_id } = req.body
+        const {area_id, cost_center_id, name, code, client_id, project_status_id, user_id, project_id } = params
         return await promisePool.query("UPDATE project SET  area_id = ?, cost_center_id = ?, name = ?, code = ?, client_id = ?, project_status_id = ?, user_id = ? WHERE project_id = ?",
         [area_id, cost_center_id, name, code, client_id, project_status_id, user_id, project_id])
         .then(([ResultSetHeader])=>{
             return { "status": true, "ejecuciones": ResultSetHeader.affectedRows}
-        }).catch(
-            console.log()
-        ).finally(
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
                 // await promisePool.end()
             )

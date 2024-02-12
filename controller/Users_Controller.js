@@ -1,12 +1,12 @@
 
-import UserContext from "../Context/UserContext.js"
+import {Users} from "../Context/UserContext.js"
 
 const Controller ={
 
     'index_users': async function(req,res,next){
 
         try {
-            const result = await UserContext.index_users(req)
+            const result = await Users.indexUsers(req)
             res.json(result)
         }
         catch (error) {
@@ -19,7 +19,7 @@ const Controller ={
 
         try {
 
-            const result = await UserContext.store_user(req)
+            const result = await Users.storeUser(req)
             res.json(result)
 
         }
@@ -33,7 +33,7 @@ const Controller ={
 
         try {
 
-            const result = await UserContext.update_user(req)
+            const result = await Users.updateUser(req)
             res.json(result)
 
         }

@@ -1,101 +1,108 @@
 import UserService from "../Services/UserService.js"
-import utilities from "../utilities/index.js"
-const UserContext ={
+import BCRYPT from "../utilities/bcrypt.js"
 
-    "checktoken":async(req)=>{
+export class Users{
 
+    constructor(){
+        this.email=''
+        this.password=''
+        this.name = ''
+        this.date_of_admission = ''
+        this.work_days_id = 0
+        this.salary = 0
+        this.role_id = 0
+        this.job_title_id = 0
+        this.area_id = 0
+        this.work_modality_id = 0
+        this.location_id = 0
+        this.status_id = 0
+        this.active = 0
+        this.phone_number = ''
+        this.team_id = 0
+    }
 
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
+    get user(){
+        return this
+    }
 
-        const result = await UserService.index_id(check_user.user_id)
-        if(result.status){
-            return result.user
-        }else{
-            return {message:'usuario no encontrado'}
-        }
-    },
+    /**
+     * @param {String} password
+     */
+    set _password(password){
+        this.password = password
+    }
 
-    "login":async(req)=>{
+    async store(){
+        return  await UserService.store_user(this.user)
+    }
 
-        const result = await UserService.index_email(req)
-        const validacion_password = utilities.bcrypt_check(req.body.password, result.user.password);
-        
-        if(validacion_password.status){
-            const token = utilities.token(result.user.user_id)
-            // retorna user y token a partir de credenciales
-            delete result.user.password
-            return {"user":result.user, "token":token}
-               
-        }else{
-            return  {'error':401 ,'message': 'Wrong passsword!'}
-        }
-    },
+    fill(body){
 
-    "index_users":async(req)=>{
+        const User = this.user
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
+        for(let key in User){
 
-        // se guarda el usuario nuevo
-        const result = await UserService.index_users(req)
-       
-        if(result.status){
-            return result
-        }else{
-            return {message:'error en la consulta usuarios'}
-        }
-    },
+            let key_body = body[key] != undefined ? true : false
+            
+            if(key_body){
 
-    "store_user":async(req)=>{
+                if(typeof User[key] === typeof body[key]){
+                    this.user[key] = body[key]
+                }
+                else{
+                    console.info('User context | wrong parameter: '+key+' | type: '+typeof User[key])
+                }
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
-
-        // se guarda el usuario nuevo
-        const result = await UserService.store(req)
-       
-        if(result.status){
-            return result
-        }else{
-            return {message:'error en la consulta guardar usuario'}
-        }
-    },
-
-    "update_user":async (req)=>{
-
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
-
-        if (req.body.password.length){
-            req.body.password = utilities.bcrypt(req.body.password)
-            const result = await UserService.update_full(req)
-            if(result.status){
-                return result.user
             }else{
-                return {message:'error en la consulta actualizar usuario completo'}
+                console.info('User context | missed parameter: '+key +' | type: '+typeof User[key])
             }
-        }else{
-            const result =  await UserService.update(req)
-            if(result.status){
-                return result
-            }else{
-                return {message:'error en la consulta actualizar usuario'}
-            }
+
         }
     }
 
-}
+    static async indexUsers(req){
 
-export default UserContext
+        const result = await UserService.index_users(req.body)
+       
+        if(result.status){
+            return result
+        }else{
+            return {"status":false,"message":"error en la consulta usuarios"}
+    
+        }
+    }
+
+    static async storeUser(req){
+
+        const _User = new Users()
+        _User.fill(req.body)
+        _User._password= BCRYPT.generate(req.body.password)
+        const result = await _User.store()
+        
+        if(result.status){
+            return {"status": true,"user": {...result.user,"password":""}  }
+        }else{
+            return {"status":false,"message":"error en la consulta guardar usuario"}
+        }
+    }
+
+    static async updateUser(req){
+
+        if (req.body.password.length){
+            req.body.password = BCRYPT.generate(req.body.password)
+            const result = await UserService.update_full(req.body)
+            if(result.status){
+                return result
+            }else{
+                return {"status":false,"message":"error en la consulta actualizar usuario completo"}
+            }
+        }else{
+            const result =  await UserService.update(req.body)
+            if(result.status){
+                return result
+            }else{
+                return {"status":false,"message":"error en la consulta actualizar usuario"}
+            }
+        }
+    }
+}

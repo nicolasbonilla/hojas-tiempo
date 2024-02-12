@@ -1,5 +1,5 @@
 
-import ProjectContext from "../Context/ProjectContext.js"
+import { Project } from "../Context/ProjectContext.js"
 
 const Controller ={
     
@@ -7,7 +7,7 @@ const Controller ={
 
         try {
 
-            const result = await ProjectContext.index_project(req)
+            const result = await Project.indexProject(req)
             res.json(result)
 
         }
@@ -21,7 +21,7 @@ const Controller ={
 
         try {
 
-            const result = await ProjectContext.store_project(req)
+            const result = await Project.storeProject(req)
             res.json(result)
 
         }
@@ -35,7 +35,7 @@ const Controller ={
 
         try {
 
-            const result = await ProjectContext.update_project(req)
+            const result = await Project.updateProject(req)
             res.json(result)
 
         }

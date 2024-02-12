@@ -1,61 +1,83 @@
-import UserService from "../Services/UserService.js"
 import ProjectService from "../Services/ProjectService.js"
-import utilities from "../utilities/index.js"
 
-const ProjectContext ={
+export class Project{
+    
+    constructor(){
+        this.code = ''
+        this.area_id = 0
+        this.cost_center_id = 0
+        this.name = ''
+        this.client_id = 0
+        this.project_status_id = 0
+        this.user_id = 0
+    }
 
-    "index_project":async(req)=>{
+    get project(){
+        return this
+    }
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
+    async store(){
+        return  await ProjectService.store_project(this.project)
+    }
+
+    fill(body){
+
+        const Project = this.project
+
+        for(let key in Project){
+
+            let key_body = body[key] != undefined ? true : false
+            
+            if(key_body){
+
+                if(typeof Project[key] === typeof body[key]){
+                    this.project[key] = body[key]
+                }
+                else{
+                    console.info('Project context | wrong parameter: '+key+' | type: '+typeof Project[key])
+                }
+
+            }else{
+                console.info('Project context | missed parameter: '+key +' | type: '+typeof Project[key])
+            }
+
         }
+    }
 
-        // se guarda el usuario nuevo
+    static async indexProject(req){
+
         const result = await ProjectService.index_projects(req)
        
         if(result.status){
             return {"projects":result.projects}
         }else{
-            return {message:'error en la consulta'}
+            return {"status":false,"message":"error en la consulta proyectos"}
         }
-    },
+    }
 
-    "store_project":async(req)=>{
+    static async storeProject(req){
+        
+        req.body.user_id = req.authenticated.validation.user_id
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
-
-        req.body.user_id = check_user.user_id
-
-        const result = await ProjectService.store_project(req)
+        const _Project = new Project()
+        _Project.fill(req.body)
+        const result = await _Project.store()
        
-        if(result.status){
-            return {"project":result.project}
-        }else{
-            return {message:'error en la consulta'}
-        }
-    },
-
-    "update_project":async (req)=>{
-
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
-        const result =  await ProjectService.update_project(req)
         if(result.status){
             return result
         }else{
-            return {"error":300,"message":'error al actualizar proyecto'}
+            return {"status":false,"message":"error la crear proyecto"}
+        }
+    }
+
+    static async updateProject(req){
+
+        const result =  await ProjectService.update_project(req.body)
+        if(result.status){
+            return result
+        }else{
+            return {"status":false,"message":'error al actualizar proyecto'}
         }
     }
 
 }
-
-export default ProjectContext

@@ -1,60 +1,77 @@
-import UserService from "../Services/UserService.js"
 import ActivityService from "../Services/ActivityService.js"
-import utilities from "../utilities/index.js"
 
-const ActivityContext ={
+export class Activity{
 
-    "index_activities":async(req)=>{
+    constructor(){
+        this.area_id= 0
+        this.name= ''
+    }
+    
+    get activity(){
+        return this
+    }
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
+    async store(){
+        return  await ActivityService.store_activity(this.activity)
+    }
 
-        const result = await ActivityService.index_activities(req)
-       
-        if(result.status){
-            return {"activities":result.activities}
-        }else{
-            return {message:'error en la consulta'}
-        }
-    },
+    fill(body){
 
-    "store_activity":async(req)=>{
+        const Activity = this.activity
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
+        for(let key in Activity){
 
-        // se guarda el usuario nuevo
-        const result = await ActivityService.store_activity(req)
-       
-        if(result.status){
-            return {"activity":result.activity}
-        }else{
-            return {message:'error en la consulta'}
-        }
-    },
+            let key_body = body[key] != undefined ? true : false
+            
+            if(key_body){
 
-    "update_activity":async (req)=>{
+                if(typeof Activity[key] === typeof body[key]){
+                    this.activity[key] = body[key]
+                }
+                else{
+                    console.info('Activity context | wrong parameter: '+key+' | type: '+typeof Activity[key])
+                }
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
-            const result =  await ActivityService.update_activity(req)
-            if(result.status){
-                return result
             }else{
-                return {"message":"error al actualizar actividad"}
+                console.info('Activity context | missed parameter: '+key +' | type: '+typeof Activity[key])
             }
+
+        }
+    }
+
+    static async indexActivities (req){
+
+        const result = await ActivityService.index_activities()
+       
+        if(result.status){
+            return result
+        }else{
+            return {"status":false,"message":"error al consultar actividades"}
+        }
+    }
+
+    static async storeActivity(req){
+
+        const _Activity = new Activity()
+        _Activity.fill(req.body)
+        const result = await _Activity.store()
+
+        if(result.status){
+            return result
+        }else{
+            return {"status":false,"message":"error al guardar una actividad"}
+        }
+    }
+
+    static async updateActivity(req){
+
+        const result =  await ActivityService.update_activity(req.body)
+        if(result.status){
+            return result
+        }else{
+            return {"status":false,"message":"error al actualizar actividad"}
+        }
 
     }
 
 }
-
-export default ActivityContext

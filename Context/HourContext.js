@@ -1,40 +1,59 @@
 import HourService from "../Services/HourService.js"
-import utilities from "../utilities/index.js"
 
-const HourContext ={
+export class Hours {
 
-    "index_hours":async(req)=>{
+    constructor(){
+        this.project_id= 0
+        this.activity_id= 0
+        this.hours= 0
+        this.date= ''
+        this.comments= ''
+        this.user_id=0
+    }
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
+    get hour(){
+        return this
+    }
+
+    async store(){
+        return  await HourService.store_hour(this.hour)
+    }
+
+    fill(body){
+
+        const Hour = this.hour
+
+        for(let key in Hour){
+
+            let key_body = body[key] != undefined ? true : false
+            
+            if(key_body){
+
+                if(typeof Hour[key] === typeof body[key]){
+                    this.hour[key] = body[key]
+                }
+                else{
+                    console.info('Hour context | wrong parameter: '+key+' | type: '+typeof Hour[key])
+                }
+
+            }else{
+                console.info('Hour context | missed parameter: '+key +' | type: '+typeof Hour[key])
+            }
+
         }
-        req.body.user_id = check_user.user_id
-        const result = await HourService.index_hours(req)
-       
-        if(result.status){
-            return result
-        }else{
-            return {message:'error en la consulta'}
-        }
-    },
-    "index_hours_month":async(req)=>{
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
+    }
 
-        req.body.user_id = check_user.user_id
-        const result = await HourService.index_hours_month(req)
+    static async indexHoursMonth (req){
+        
+        req.body.user_id = req.authenticated.validation.user_id
+        const result = await HourService.index_hours_month(req.body)
        
         req.body = {...req.body, date: req.body.old }
-        const olds = await HourService.index_hours_month(req)
+        const olds = await HourService.index_hours_month(req.body)
         
         req.body = {...req.body, date: req.body.prev }
-        const prevs = await HourService.index_hours_month(req)
+        const prevs = await HourService.index_hours_month(req.body)
        
         if(!result.status || !olds.status || !prevs.status ){
             return {"status": false, message:'error en la consulta'}
@@ -42,31 +61,52 @@ const HourContext ={
         
         return {"status":true,"hours": result.hours, "old": olds.hours, "prev": prevs.hours }
 
-    },
-    "index_hours_between":async(req)=>{
+    }
 
-        //validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
+    static async indexHours(req){
 
-        const result = await HourService.index_hours_between(req)
+        req.body.user_id = req.authenticated.validation.user_id
+        const result = await HourService.index_hours(req.body)
        
         if(result.status){
             return result
         }else{
-            return {message:'¡error al consultar registros de tiempos por rango!'}
+            return {"status":false,"message":"error en la consulta horas"}
+        }
+    }
+
+    static async indexHoursMonth(req){
+        
+        req.body.user_id = req.authenticated.validation.user_id
+        const result = await HourService.index_hours_month(req.body)
+       
+        req.body = {...req.body, date: req.body.old }
+        const olds = await HourService.index_hours_month(req.body)
+        
+        req.body = {...req.body, date: req.body.prev }
+        const prevs = await HourService.index_hours_month(req.body)
+       
+        if(!result.status || !olds.status || !prevs.status ){
+            return {"status": false, message:'error en la consulta'}
+        }
+        
+        return {"status":true,"hours": result.hours, "old": olds.hours, "prev": prevs.hours }
+
+    }
+
+    static async indexHoursBetween(req){
+ 
+        const result = await HourService.index_hours_between(req.body.range)
+       
+        if(result.status){
+            return result
+        }else{
+            return {"status":false,"message":"error al consultar registros de tiempos por rango"}
         }
 
-    },
-    "store_hours":async(req)=>{
+    }
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
+    static async storeHours(req){
 
         let registros = req.body.hours || []
 
@@ -74,47 +114,40 @@ const HourContext ={
         for (let index = 0; index < registros.length; index++){
 
             let element = registros[index]
-            element.user_id = check_user.user_id
-            const result = await HourService.store_hour(element)
+            element.user_id = req.authenticated.validation.user_id
+            
+            const _Hour = new Hours()
+            _Hour.fill(element)
+            const result = await _Hour.store()
+            
             if(result.status){
                 hours.push(result.hour)
             }else{
-                return {"status":false,message:'error al crear un registro de tiempo'}
+                return {"status":false,message:"Error al crear un registro de tiempo"}
             }
 
         }
 
         return{"status": true, "hours": hours}
-    },
-    "update_hour":async (req)=>{
+    }
 
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
-        const result =  await HourService.update_hour(req)
+    static async updateHour(req){
+
+        const result =  await HourService.update_hour(req.body)
         if(result.status){
             return result 
         }else{
-            return {"status":false, message:'error al actualizar un registro de tiempo'}
-        }
-    },
-    "delete_hour":async (req)=>{
-
-        // validar con jwt el usuario actual
-        const check_user = utilities.jwt_check(req)
-        if(!check_user.status){
-            return check_user
-        }
-        const result =  await HourService.delete_hour(req)
-        if(result.status){
-            return result
-        }else{
-            return {message:'error al eliminar un registro de hora'}
+            return {"status":false, message:"error al actualizar un registro de tiempo"}
         }
     }
 
-}
+    static async deleteHour(req){
 
-export default HourContext
+        const result =  await HourService.delete_hour(req.body)
+        if(result.status){
+            return result
+        }else{
+            return {"status":false, message:"error al eliminar un registro de hora"}
+        }
+    }
+}

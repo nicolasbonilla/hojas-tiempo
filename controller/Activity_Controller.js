@@ -1,13 +1,13 @@
 
-import ActivityContext from "../Context/ActivityContext.js"
+import { Activity } from "../Context/ActivityContext.js"
 
 const Activity_Controller ={
     
-    'index_activities': async function(req,res,next){
+    'indexActivities': async function(req,res,next){
 
         try {
 
-            const result = await ActivityContext.index_activities(req)
+            const result = await Activity.indexActivities(req)
             res.json(result)
 
         }
@@ -17,11 +17,11 @@ const Activity_Controller ={
 
     },    
 
-    'store_activity': async function(req,res,next){
+    'storeActivity': async function(req,res,next){
 
         try {
 
-            const result = await ActivityContext.store_activity(req)
+            const result = await Activity.storeActivity(req)
             res.json(result)
 
         }
@@ -31,11 +31,11 @@ const Activity_Controller ={
 
     },
     
-    'update_activity': async function(req,res,next){
+    'updateActivity': async function(req,res,next){
 
         try {
 
-            const result = await ActivityContext.update_activity(req)
+            const result = await Activity.updateActivity(req)
             res.json(result)
 
         }

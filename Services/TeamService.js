@@ -5,7 +5,7 @@ const promisePool = mysql_method.pool.promise()
 
 const UserService ={
 
-    'index_teams':async function(req){
+    'index_teams':async function(){
 
         return await promisePool.query("SELECT * FROM team")
         .then(([rows,fields])=>{

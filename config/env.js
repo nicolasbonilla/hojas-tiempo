@@ -4,8 +4,9 @@ dotenv.config()
 const Development = {
         'app':{
                 "port": 8080,
-                "urlsb":"", //url backend
-                "urlsf":"" // url frontend
+                "urlsf":"https://axontime.lat", // url frontend
+                "jwt_sign":'Axon_time',
+                "jwt_header_key":'token'
         },
         'database':{
                 'host': "34.173.138.148",
@@ -19,8 +20,9 @@ const Development = {
 const Production = {
         'app':{
                 "port": process.env.PORT || 0,// en producción dejar en 0 o configurar solo si es necesario
-                "urlsb":"", // url backend
-                "urlsf":"" // url frontend
+                "urlsf":"https://axontime.lat", // url frontend
+                "jwt_sign":'Axon_time',
+                "jwt_header_key":'token'
         },
         'database':{
                 'host': process.env.DB_HOST,
