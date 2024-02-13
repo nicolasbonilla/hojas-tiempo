@@ -56,7 +56,7 @@ export class Hours {
         const prevs = await HourService.index_hours_month(req.body)
        
         if(!result.status || !olds.status || !prevs.status ){
-            return {"status": false, message:'error en la consulta'}
+            return {"status": false, "message":"error en la consulta horas por mes"}
         }
         
         return {"status":true,"hours": result.hours, "old": olds.hours, "prev": prevs.hours }
@@ -73,25 +73,6 @@ export class Hours {
         }else{
             return {"status":false,"message":"error en la consulta horas"}
         }
-    }
-
-    static async indexHoursMonth(req){
-        
-        req.body.user_id = req.authenticated.validation.user_id
-        const result = await HourService.index_hours_month(req.body)
-       
-        req.body = {...req.body, date: req.body.old }
-        const olds = await HourService.index_hours_month(req.body)
-        
-        req.body = {...req.body, date: req.body.prev }
-        const prevs = await HourService.index_hours_month(req.body)
-       
-        if(!result.status || !olds.status || !prevs.status ){
-            return {"status": false, message:'error en la consulta'}
-        }
-        
-        return {"status":true,"hours": result.hours, "old": olds.hours, "prev": prevs.hours }
-
     }
 
     static async indexHoursBetween(req){
