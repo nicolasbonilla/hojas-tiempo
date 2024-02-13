@@ -23,7 +23,7 @@ const utilities = {
                 
                 // validación de parametros con formato especial, email, name, o los que desee personalizar
                 case 'email':
-                    if(!this.validator_email(body[array[index]])){
+                    if(!this.validatorEmail(body[array[index]])){
                         validator_status = false
                         validator_parameters.push(array[index])
                         error = 400

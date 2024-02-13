@@ -53,7 +53,8 @@ export class ProjectController {
                 'name',
                 'client_id',
                 'project_status_id',
-                'project_id'
+                'project_id',
+                'user_id'
             ])
 
             if(!request_validator.status){
