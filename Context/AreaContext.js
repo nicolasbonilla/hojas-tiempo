@@ -7,9 +7,9 @@ export class Areas{
         const result = await AreaService.index_areas(req)
        
         if(result.status){
-            return {"areas":result.areas}
+            return result
         }else{
-            return {"error":404,message:'error en la consulta'}
+            return {"status":false,"error":404,"message":"error en la consulta obtener areas"}
         }
     }
 
@@ -18,9 +18,9 @@ export class Areas{
         const result = await AreaService.store_area(req)
        
         if(result.status){
-            return {"area":result.area}
+            return result
         }else{
-            return {message:'error en la consulta'}
+            return {"status":false,"message":"error en la consulta al guardar area"}
         }
     }
 
@@ -30,7 +30,7 @@ export class Areas{
         if(result.status){
             return result
         }else{
-            return {message:'error en la consulta'}
+            return {"status":false,"message":"error en la consulta actualizar area"}
         }
     }
 

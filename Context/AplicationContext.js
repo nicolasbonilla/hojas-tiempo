@@ -17,9 +17,9 @@ export class Aplication {
                 }
             })
             const user = { ...result.user, "permissions": permissions }
-            return {"user":user}
+            return {"status":true,"user":user}
         }else{
-            return {"error":404, "message":'Usuario no encontrado!'}
+            return {"status":false,"error":404, "message":'Usuario no encontrado!'}
         }
     }
 
