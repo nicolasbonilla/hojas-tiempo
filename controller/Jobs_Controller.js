@@ -7,7 +7,7 @@ const Controller ={
 
         try {
             const result = await JobsContext.index_jobs(req)
-            res.json(result)
+            return res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })

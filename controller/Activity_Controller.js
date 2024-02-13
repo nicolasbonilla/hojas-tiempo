@@ -8,7 +8,7 @@ const Activity_Controller ={
         try {
 
             const result = await Activity.indexActivities(req)
-            res.json(result)
+            return res.json(result)
 
         }
         catch (error) {
@@ -22,7 +22,7 @@ const Activity_Controller ={
         try {
 
             const result = await Activity.storeActivity(req)
-            res.json(result)
+            return res.json(result)
 
         }
         catch (error) {
@@ -36,7 +36,7 @@ const Activity_Controller ={
         try {
 
             const result = await Activity.updateActivity(req)
-            res.json(result)
+            return res.json(result)
 
         }
         catch (error) {

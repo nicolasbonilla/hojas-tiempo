@@ -7,7 +7,7 @@ const Controller ={
 
         try {
             const result = await AreaContext.index_areas(req)
-            res.json(result)
+            return res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
@@ -18,7 +18,7 @@ const Controller ={
 
         try {
             const result = await AreaContext.store_area(req)
-            res.json(result)
+            return res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
@@ -29,7 +29,7 @@ const Controller ={
 
         try {
             const result = await AreaContext.update_area(req)
-            res.json(result)
+            return res.json(result)
         }
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })

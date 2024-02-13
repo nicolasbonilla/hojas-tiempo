@@ -8,7 +8,7 @@ const Controller ={
         try {
 
             const result = await Project.indexProject(req)
-            res.json(result)
+            return res.json(result)
 
         }
         catch (error) {
@@ -22,7 +22,7 @@ const Controller ={
         try {
 
             const result = await Project.storeProject(req)
-            res.json(result)
+            return res.json(result)
 
         }
         catch (error) {
@@ -36,7 +36,7 @@ const Controller ={
         try {
 
             const result = await Project.updateProject(req)
-            res.json(result)
+            return res.json(result)
 
         }
         catch (error) {

@@ -7,7 +7,7 @@ const Controller ={
 
         try {
             const result = await AplicationContext.checktoken(req)
-            res.json(result)
+            return res.json(result)
 
         }
         catch (error) {
@@ -20,7 +20,7 @@ const Controller ={
         try {
             // obtener usuario a partir de credenciales
             const result = await AplicationContext.login(req)
-            res.json(result)
+            return res.json(result)
 
         }
         catch (error) {
