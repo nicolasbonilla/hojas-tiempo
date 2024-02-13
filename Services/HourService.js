@@ -11,10 +11,11 @@ const HourService ={
         return await promisePool.query(
             'SELECT *, DATE_FORMAT(date,"%Y-%m-%d") AS date FROM hours WHERE user_id = ? AND date = ?',[user_id, date]    
         ).then(([rows,fields])=>{
-            return  { "status": true, "hours":rows}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"hours":rows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
@@ -24,12 +25,11 @@ const HourService ={
         return await promisePool.query(
             'SELECT *,DATE_FORMAT(date,"%d") AS day, DATE_FORMAT(date,"%Y-%m-%d") AS date FROM hours WHERE DATE_FORMAT(date,"%Y-%m") = DATE_FORMAT(?,"%Y-%m") AND user_id = ?',[date,user_id]    
         ).then(([rows,fields])=>{
-            return  { "status": true, "hours":rows}
+            return {"status":true,"hours":rows}
         }).catch((err)=>{
             console.log(err)
             return {"status": false}
-        }
-        ).finally(
+        }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
@@ -47,12 +47,11 @@ const HourService ={
             `
             ,[start,end]
         ).then(([rows,fields])=>{
-            return  { "status": true, "hours":rows}
+            return {"status":true,"hours":rows}
         }).catch((err)=>{
             console.log(err)
             return {"status": false}
-        }
-        ).finally(
+        }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
@@ -64,7 +63,7 @@ const HourService ={
         return await promisePool.query(
             'INSERT INTO hours (project_id, activity_id, hours, date,comments,user_id) VALUES (?,?,?,?,?,?)',[project_id,activity_id,hours,date,comments,user_id]
         ).then(([ResultSetHeader])=>{
-            return  { "status": true, "hour":{ "hours_id": ResultSetHeader.insertId, ...params, "day": day }}
+            return {"status":true,"hour":{"hours_id":ResultSetHeader.insertId, ...params,"day":day}}
         }).catch((err)=>{
             console.log(err)
             return {"status":false}
@@ -78,7 +77,7 @@ const HourService ={
         return await promisePool.query("UPDATE hours SET  project_id = ?, activity_id = ?, hours = ?, date = ?, comments = ?, user_id = ?  WHERE hours_id = ?",
         [project_id, activity_id,hours, date, comments, user_id, hours_id])
         .then(([ResultSetHeader])=>{
-            return { "status": true, "executed": ResultSetHeader.affectedRows}
+            return {"status":true,"executed":ResultSetHeader.affectedRows}
         }).catch((err)=>{
             console.log(err)
             return {"status":false}
@@ -93,10 +92,11 @@ const HourService ={
         return await promisePool.query(
             "DELETE FROM hours WHERE hours_id = ?",[hours_id]
         ).then(([ResultSetHeader])=>{
-            return { "status":true, "executed": ResultSetHeader.affectedRows }
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"executed":ResultSetHeader.affectedRows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )

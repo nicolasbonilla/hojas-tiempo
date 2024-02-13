@@ -10,10 +10,11 @@ const AreaService ={
         return await promisePool.query(
             'SELECT * FROM area'
         ).then(([rows,fields])=>{
-            return  { "status": true, "areas":rows}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"areas":rows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
@@ -25,11 +26,12 @@ const AreaService ={
             'INSERT INTO area (acronym, name, description) VALUES ("INX","Innovación","Innovation")'
             
         ).then(([ResultSetHeader])=>{
-            return  { "status": true, "area":{ "area_id": ResultSetHeader.insertId,"acronym":"INX","name":"Innovación","description":"Innovación" }}
-        }).catch(
-            console.log()
-        ).finally(
-           //solo si es necesario
+            return {"status":true,"area":{"area_id": ResultSetHeader.insertId,"acronym":"INX","name":"Innovación","description":"Innovación" }}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
+            //solo si es necesario
             // await promisePool.end()
         )
     
@@ -41,13 +43,14 @@ const AreaService ={
         return await promisePool.query("UPDATE area SET  acronym = ?, name = ?, description = ? WHERE area_id = ?",
         [acronym, name, description, area_id])
         .then(([ResultSetHeader])=>{
-            return { "status": true, "ejecuciones": ResultSetHeader.affectedRows}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"ejecuciones":ResultSetHeader.affectedRows}
+        }).catch((err)=>{
+            console.log(err)
+            return{"status":false}
+        }).finally(
             //solo si es necesario
-                // await promisePool.end()
-            )
+            // await promisePool.end()
+        )
 
     }
 }

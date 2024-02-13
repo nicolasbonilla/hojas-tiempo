@@ -10,10 +10,11 @@ const UserService ={
 
         return await promisePool.query("SELECT user_id,email,name,DATE_FORMAT(date_of_admission,'%Y/%m/%d') AS date_of_admission, work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id, CASE TRUE WHEN TRUE THEN '' END AS password FROM users")
         .then(([rows,fields])=>{
-            return { "status": true, "users": rows}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"users":rows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )
@@ -38,10 +39,11 @@ const UserService ={
         `    
         ,[email])
         .then(([rows,fields])=>{
-            return { "status": true, "user": rows[0]}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"user":rows[0]}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )
@@ -67,11 +69,11 @@ const UserService ={
         `
         ,[user_id])
         .then(([rows,fields])=>{
-            return { "status": true, "user": rows[0]}
-
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"user":rows[0]}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )
@@ -85,12 +87,11 @@ const UserService ={
             'INSERT INTO users (email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password]
         ).then(([ResultSetHeader])=>{
-            return  { "status": true, "user":{ "user_id": ResultSetHeader.insertId,...params }}
+            return {"status":true,"user":{"user_id": ResultSetHeader.insertId,...params }}
         }).catch((err)=>{
             console.log(err)
             return {"status":false}
-        }
-        ).finally(
+        }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
@@ -102,7 +103,7 @@ const UserService ={
         return await promisePool.query("UPDATE users SET team_id = ?, email = ?, password = ?, name = ?, date_of_admission = ?, work_days_id = ?, salary = ?, role_id = ?, job_title_id = ?, area_id = ?, work_modality_id = ?, location_id = ?, status_id = ?, active = ?, phone_number = ? WHERE user_id = ?",
         [team_id, email, password, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id])
         .then(([ResultSetHeader])=>{
-            return { "status": true, "ejecuciones": ResultSetHeader.affectedRows}
+            return {"status":true,"ejecuciones": ResultSetHeader.affectedRows}
         }).catch((err)=>{
             console.log(err)
             return {"status": false}
@@ -117,7 +118,7 @@ const UserService ={
         return await promisePool.query("UPDATE users SET team_id = ?, email = ?, name = ?, date_of_admission = ?, work_days_id = ?, salary = ?, role_id = ?, job_title_id = ?, area_id = ?, work_modality_id = ?, location_id = ?, status_id = ?, active = ?, phone_number = ? WHERE user_id = ?",
         [team_id, email, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id])
         .then(([ResultSetHeader])=>{
-            return { "status": true, "ejecuciones": ResultSetHeader.affectedRows}
+            return {"status":true,"ejecuciones":ResultSetHeader.affectedRows}
         }).catch((err)=>{
             console.log(err)
             return {"status":false}

@@ -9,10 +9,11 @@ const UserService ={
 
         return await promisePool.query("SELECT * FROM client")
         .then(([rows,fields])=>{
-            return { "status": true, "clients": rows}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"clients":rows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )
@@ -20,16 +21,17 @@ const UserService ={
     },
     "store_client": async function(req){
 
-        const {} = req.body
+        const {name,email} = req.body
 
         return await promisePool.query(
             'INSERT INTO client () VALUES (?)',
             []
         ).then(([ResultSetHeader])=>{
-            return  { "status": true, "client":{ "client_id": ResultSetHeader.insertId,...req.body }}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"client":{"client_id": ResultSetHeader.insertId,...req.body }}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
            //solo si es necesario
             // await promisePool.end()
         )

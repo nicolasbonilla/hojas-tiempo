@@ -11,10 +11,11 @@ const PermissionService ={
 
         return await promisePool.query("SELECT * FROM permissions WHERE role_id = ?",[role_id])
         .then(([rows,fields])=>{
-            return { "status": true, "permissions": rows}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"permissions":rows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )

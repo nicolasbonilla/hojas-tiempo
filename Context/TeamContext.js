@@ -1,8 +1,8 @@
 import TeamService from "../Services/TeamService.js"
 
-const TeamContext ={
+export class Teams{
 
-    "index_teams":async(req)=>{
+    static async indexTeams(req){
 
         const result = await TeamService.index_teams(req)
         if(result.status){
@@ -10,12 +10,6 @@ const TeamContext ={
         }else{
             return {"error":404, "message":'error en la consulta equipos'}
         }
-    },
-
-    "store_team":async(req)=>{
-
     }
-
+        
 }
-
-export default TeamContext

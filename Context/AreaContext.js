@@ -1,8 +1,8 @@
 import AreaService from "../Services/AreaService.js"
 
-const AreaContext ={
+export class Areas{
 
-    "index_areas":async(req)=>{
+    static async indexAreas(req){
 
         const result = await AreaService.index_areas(req)
        
@@ -11,8 +11,9 @@ const AreaContext ={
         }else{
             return {"error":404,message:'error en la consulta'}
         }
-    },
-    "store_area":async(req)=>{
+    }
+
+    static async storeArea(req){
 
         const result = await AreaService.store_area(req)
        
@@ -21,8 +22,9 @@ const AreaContext ={
         }else{
             return {message:'error en la consulta'}
         }
-    },
-    "update_area":async (req)=>{
+    }
+
+    static async updateArea(req){
 
         const result =  await AreaService.update_area(req)
         if(result.status){
@@ -33,5 +35,3 @@ const AreaContext ={
     }
 
 }
-
-export default AreaContext

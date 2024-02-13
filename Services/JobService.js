@@ -10,10 +10,11 @@ const JobService ={
 
         return await promisePool.query("SELECT * FROM job_title")
         .then(([rows,fields])=>{
-            return { "status": true, "jobs": rows}
-        }).catch(
-            console.log()
-        ).finally(
+            return {"status":true,"jobs":rows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false}
+        }).finally(
             //solo si es necesario
             // await promisePool.end()
         )

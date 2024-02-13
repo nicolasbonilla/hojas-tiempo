@@ -2,9 +2,9 @@ import UserService from "../Services/UserService.js"
 import BCRYPT from "../utilities/bcrypt.js"
 import JWT from "../utilities/jwt.js"
 
-const AplicationContext ={
+export class Aplication {
 
-    "checktoken":async(req)=>{
+    static async checkToken (req){
 
         const result = await UserService.index_id({"user_id": req.authenticated.validation.user_id})
         if(result.user.user_id){
@@ -21,9 +21,9 @@ const AplicationContext ={
         }else{
             return {"error":404, "message":'Usuario no encontrado!'}
         }
-    },
+    }
 
-    "login":async(req)=>{
+    static async login (req){
 
         const result = await UserService.index_email(req.body)
         
@@ -54,5 +54,3 @@ const AplicationContext ={
     }
 
 }
-
-export default AplicationContext

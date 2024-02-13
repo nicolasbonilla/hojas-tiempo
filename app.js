@@ -5,16 +5,16 @@ import logger from 'morgan'
 import cors from 'cors'
 
 // ######### rutas importadas ##########
-import default_router from './routes/Default_Router.js'
-import aplicacion_router from './routes/Aplication_Router.js'
-import users_router from './routes/Users_Router.js'
-import projects_router from './routes/Projects_Router.js'
-import activities_router from './routes/Activities_Router.js'
-import hours_router from './routes/Hours_Router.js'
-import area_router from './routes/Area_Router.js'
-import clients_router from './routes/Clients_Router.js'
-import jobs_router from './routes/Jobs_Router.js'
-import teams_router from './routes/Team_Router.js'
+import defaultRouter from './routes/DefaultRouter.js'
+import aplicacionRouter from './routes/AplicationRouter.js'
+import usersRouter from './routes/UsersRouter.js'
+import projectsRouter from './routes/ProjectsRouter.js'
+import activitiesRouter from './routes/ActivitiesRouter.js'
+import hoursRouter from './routes/HoursRouter.js'
+import areaRouter from './routes/AreaRouter.js'
+import clientsRouter from './routes/ClientsRouter.js'
+import jobsRouter from './routes/JobsRouter.js'
+import teamsRouter from './routes/TeamRouter.js'
 
 var app = express()
 var _dirname = './' //ruta directorio actual
@@ -38,17 +38,17 @@ app.use(_cors)
 app.use(express.static(_dirname + '/public')) // define la carpeta
 
 // ########### rutas definidas ###################
-app.use('/', default_router)
+app.use('/', defaultRouter)
 app.use('/public', express.static('./public/')) // ruta estatica para recursos
-app.use('/api/aplication', aplicacion_router)
-app.use('/api/users', users_router)
-app.use('/api/projects', projects_router)
-app.use('/api/activities', activities_router)
-app.use('/api/hours', hours_router)
-app.use('/api/area', area_router)
-app.use('/api/clients', clients_router)
-app.use('/api/jobs', jobs_router)
-app.use('/api/teams', teams_router)
+app.use('/api/aplication', aplicacionRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/projects', projectsRouter)
+app.use('/api/activities', activitiesRouter)
+app.use('/api/hours', hoursRouter)
+app.use('/api/area', areaRouter)
+app.use('/api/clients', clientsRouter)
+app.use('/api/jobs', jobsRouter)
+app.use('/api/teams', teamsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

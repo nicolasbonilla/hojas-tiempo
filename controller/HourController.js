@@ -2,9 +2,9 @@
 import { Hours } from "../Context/HourContext.js"
 import Utilities from "../utilities/index.js"
 
-const Controller ={
+export class HourController {
 
-    'indexHours': async function(req,res,next){
+    static async indexHours(req,res,next){
         try {
 
             let request_validator = Utilities.validatorRequest(req.body,[
@@ -21,8 +21,9 @@ const Controller ={
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
-    },
-    'indexHoursMonth': async function(req,res,next){
+    }
+
+    static async indexHoursMonth(req,res,next){
         try {
             
             let request_validator = Utilities.validatorRequest(req.body,[
@@ -41,8 +42,9 @@ const Controller ={
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
-    },
-    'indexHoursBetween':async function(req,res,next){
+    }
+
+    static async indexHoursBetween(req,res,next){
         try {
             
             let request_validator = Utilities.validatorRequest(req.body,[
@@ -59,8 +61,9 @@ const Controller ={
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
-    },
-    'storeHours': async function(req,res,next){
+    }
+
+    static async storeHours(req,res,next){
         try {
             
             let request_validator = Utilities.validatorRequest(req.body,[
@@ -77,8 +80,9 @@ const Controller ={
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
-    },
-    'updateHour': async function(req,res,next){
+    }
+
+    static async updateHour(req,res,next){
         try {
 
             let request_validator = Utilities.validatorRequest(req.body,[
@@ -101,8 +105,9 @@ const Controller ={
         catch (error) {
             return res.status(500).json({ "error": 500, "message": error.message })
         }
-    },
-    'deleteHour': async function(req,res,next){
+    }
+
+    static async deleteHour(req,res,next){
         try {
 
             let request_validator = Utilities.validatorRequest(req.body,[
@@ -122,5 +127,3 @@ const Controller ={
     }
 
 }
-
-export default Controller

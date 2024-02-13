@@ -1,10 +1,7 @@
 import JobService from "../Services/JobService.js"
+export class Jobs{
 
-const JobsContext ={
-
-    "index_jobs":async(req)=>{
-
-        // se guarda el usuario nuevo
+    static async indexJobs(req){
         const result = await JobService.index_jobs(req)
        
         if(result.status){
@@ -15,5 +12,3 @@ const JobsContext ={
     }
 
 }
-
-export default JobsContext
