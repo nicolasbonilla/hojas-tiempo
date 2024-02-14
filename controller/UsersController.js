@@ -69,9 +69,9 @@ export class UsersController{
                 'work_modality_id',
                 'location_id',
                 'status_id',
-                'active',
-                'phone_number',
-                'team_id'
+                //'active',
+                //'phone_number',
+                //'team_id' // este valor puede estar nulo en la db y no pasa esta validacíon
             ])
 
             if(!request_validator.status){

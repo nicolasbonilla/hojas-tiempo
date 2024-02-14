@@ -27,7 +27,7 @@ const utilities = {
                         validator_status = false
                         validator_parameters.push(array[index])
                         error = 400
-                    } 
+                    }
                 break;
 
                 // validación si existe el parametro independiente de si el formato es correcto
