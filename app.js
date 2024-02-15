@@ -15,6 +15,7 @@ import areaRouter from './routes/AreaRouter.js'
 import clientsRouter from './routes/ClientsRouter.js'
 import jobsRouter from './routes/JobsRouter.js'
 import teamsRouter from './routes/TeamRouter.js'
+import reportRouter from './routes/ReportRouter.js'
 
 var app = express()
 var _dirname = './' //ruta directorio actual
@@ -49,6 +50,7 @@ app.use('/api/area', areaRouter)
 app.use('/api/clients', clientsRouter)
 app.use('/api/jobs', jobsRouter)
 app.use('/api/teams', teamsRouter)
+app.use('/api/report', reportRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
