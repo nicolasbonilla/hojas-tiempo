@@ -72,7 +72,7 @@ export class Hours {
        
         if(resultTimes.status){
             const routines = resultRoutines.status === true ? resultRoutines.routines : []
-            return {"status":true, "hours": resultTimes.hours, "routines": RoutineUtility.validate(routines,req.body.date)}
+            return {"status":true, "hours": resultTimes.hours, "routines": RoutineUtility.validateRangeTime(routines,req.body.date)}
         }else{
             return {"status":false,"message":"error en la consulta horas actual mes"}
         }
