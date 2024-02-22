@@ -17,7 +17,7 @@ export class Project{
     }
 
     async store(){
-        return  await ProjectService.store_project(this.project)
+        return  await ProjectService.storeProject(this.project)
     }
 
     fill(body){
@@ -45,39 +45,18 @@ export class Project{
     }
 
     static async indexProject(req){
-
-        const result = await ProjectService.index_projects(req)
-       
-        if(result.status){
-            return {"projects":result.projects}
-        }else{
-            return {"status":false,"message":"error en la consulta proyectos"}
-        }
+        return await ProjectService.indexProjects(req)
     }
 
     static async storeProject(req){
-        
         req.body.user_id = req.authenticated.validation.user_id
-
         const _Project = new Project()
         _Project.fill(req.body)
-        const result = await _Project.store()
-       
-        if(result.status){
-            return result
-        }else{
-            return {"status":false,"message":"error la crear proyecto"}
-        }
+        return await _Project.store()
     }
 
     static async updateProject(req){
-
-        const result =  await ProjectService.update_project(req.body)
-        if(result.status){
-            return result
-        }else{
-            return {"status":false,"message":'error al actualizar proyecto'}
-        }
+        return ProjectService.updateProject(req.body)
     }
 
 }

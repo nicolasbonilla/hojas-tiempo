@@ -6,7 +6,7 @@ const promisePool = mysql_method.pool.promise()
 
 const ReportService ={
 
-    "index_report_xlsx_range": async function(params){
+    "indexReportXlsxRange": async function(params){
         const {start, end}  = params
         return await promisePool.query(
             `
@@ -43,7 +43,7 @@ const ReportService ={
             return {"status":true,"report":rows}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false,"message":"error al consultar reporte excel por rango"}
         }).finally(
             //solo si es necesario
             // await promisePool.end()

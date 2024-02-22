@@ -12,7 +12,7 @@ export class Activity{
     }
 
     async store(){
-        return  await ActivityService.store_activity(this.activity)
+        return await ActivityService.storeActivity(this.activity)
     }
 
     fill(body){
@@ -40,38 +40,17 @@ export class Activity{
     }
 
     static async indexActivities (req){
-
-        const result = await ActivityService.index_activities()
-       
-        if(result.status){
-            return result
-        }else{
-            return {"status":false,"message":"error al consultar actividades"}
-        }
+        return await ActivityService.indexActivities()
     }
 
     static async storeActivity(req){
-
         const _Activity = new Activity()
         _Activity.fill(req.body)
-        const result = await _Activity.store()
-
-        if(result.status){
-            return result
-        }else{
-            return {"status":false,"message":"error al guardar una actividad"}
-        }
+        return await _Activity.store()
     }
 
     static async updateActivity(req){
-
-        const result =  await ActivityService.update_activity(req.body)
-        if(result.status){
-            return result
-        }else{
-            return {"status":false,"message":"error al actualizar actividad"}
-        }
-
+        return await ActivityService.updateActivity(req.body)
     }
 
 }

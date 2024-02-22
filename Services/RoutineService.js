@@ -14,7 +14,7 @@ const RoutineService ={
             return {"status":true,"routines":rows}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false, "message": "error al consultar rutinas por rango de tiempo"}
         }).finally(
            //solo si es necesario
             // await promisePool.end()
@@ -30,9 +30,24 @@ const RoutineService ={
             return {"status":true,"routine":{"routine_id":ResultSetHeader.insertId, ...params}}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false,message:"error al guardar una rutina"}
         }).finally(
            //solo si es necesario
+            // await promisePool.end()
+        )
+    },
+    "deleteRoutine": async function(params){
+        
+        const { routine_id, user_id } = params
+        return await promisePool.query(
+            "DELETE FROM routine WHERE routine_id = ? AND user_id = ?",[routine_id,user_id]
+        ).then(([ResultSetHeader])=>{
+            return {"status":true,"executed":ResultSetHeader.affectedRows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false,"message":"error al eliminar una rutina"}
+        }).finally(
+            //solo si es necesario
             // await promisePool.end()
         )
     }

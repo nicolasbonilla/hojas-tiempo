@@ -5,21 +5,21 @@ const promisePool = mysql_method.pool.promise()
 
 const UserService ={
 
-    'index_teams':async function(){
+    'indexTeams':async function(){
 
         return await promisePool.query("SELECT * FROM team")
         .then(([rows,fields])=>{
             return {"status":true,"teams":rows}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false,"message":"error al consultar equipos"}
         }).finally(
             //solo si es necesario
             // await promisePool.end()
         )
 
     },
-    "store_team": async function(req){
+    "storeTeam": async function(req){
 
         const {} = req.body
 
@@ -30,7 +30,7 @@ const UserService ={
             return {"status":true,"team":{"team_id":ResultSetHeader.insertId,...req.body }}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false,"message":"error al guardar un equipo"}
         }).finally(
             //solo si es necesario
             // await promisePool.end()

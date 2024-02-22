@@ -17,7 +17,7 @@ export class Hours {
     }
 
     async store(){
-        return  await HourService.store_hour(this.hour)
+        return  await HourService.storeHour(this.hour)
     }
 
     fill(body){
@@ -48,16 +48,16 @@ export class Hours {
     static async indexHoursMonth (req){
         
         req.body.user_id = req.authenticated.validation.user_id
-        const result = await HourService.index_hours_month(req.body)
+        const result = await HourService.indexHoursMonth(req.body)
        
         req.body = {...req.body, date: req.body.old }
-        const olds = await HourService.index_hours_month(req.body)
+        const olds = await HourService.indexHoursMonth(req.body)
         
         req.body = {...req.body, date: req.body.prev }
-        const prevs = await HourService.index_hours_month(req.body)
+        const prevs = await HourService.indexHoursMonth(req.body)
        
         if(!result.status || !olds.status || !prevs.status ){
-            return {"status": false, "message":"error en la consulta horas por mes"}
+            return {"status":false,"message":"error en la consulta de tiempos por mes"}
         }
         
         return {"status":true,"hours": result.hours, "old": olds.hours, "prev": prevs.hours }
@@ -67,7 +67,7 @@ export class Hours {
     static async indexHours(req){
 
         req.body.user_id = req.authenticated.validation.user_id
-        const resultTimes = await HourService.index_hours(req.body)
+        const resultTimes = await HourService.indexHours(req.body)
         const resultRoutines = await RoutineService.indexRoutinesRange(req.body)
        
         if(resultTimes.status){
@@ -79,15 +79,7 @@ export class Hours {
     }
 
     static async indexHoursBetween(req){
- 
-        const result = await HourService.index_hours_between(req.body.range)
-       
-        if(result.status){
-            return result
-        }else{
-            return {"status":false,"message":"error al consultar registros de tiempos por rango"}
-        }
-
+        return await HourService.indexHoursBetween(req.body.range)
     }
 
     static async storeHours(req){
@@ -107,7 +99,7 @@ export class Hours {
             if(result.status){
                 hours.push(result.hour)
             }else{
-                return {"status":false,message:"Error al crear un registro de tiempo"}
+                return result
             }
 
         }
@@ -116,22 +108,10 @@ export class Hours {
     }
 
     static async updateHour(req){
-
-        const result =  await HourService.update_hour(req.body)
-        if(result.status){
-            return result 
-        }else{
-            return {"status":false, message:"error al actualizar un registro de tiempo"}
-        }
+        return await HourService.updateHour(req.body)
     }
 
     static async deleteHour(req){
-
-        const result =  await HourService.delete_hour(req.body)
-        if(result.status){
-            return result
-        }else{
-            return {"status":false, message:"error al eliminar un registro de hora"}
-        }
+        return await HourService.deleteHour(req.body)
     }
 }

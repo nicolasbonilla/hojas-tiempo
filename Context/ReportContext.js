@@ -5,14 +5,14 @@ export class Report {
 
     static async indexReportXlsxRange (req){    
     
-        const result = await ReportService.index_report_xlsx_range(req.body)
+        const result = await ReportService.indexReportXlsxRange(req.body)
         if(!result.status){
             return result
         }
         try {
             return await this.generateFileXlsx(result)
         } catch(error){
-            return {"status":false}    
+            return {"status":false,"message":"error al generar reporte excel"}
         }
 
     }

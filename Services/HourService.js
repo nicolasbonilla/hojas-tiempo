@@ -6,7 +6,7 @@ const promisePool = mysql_method.pool.promise()
 
 const HourService ={
 
-    "index_hours": async function(params){
+    "indexHours": async function(params){
         const {date, user_id}  = params
         return await promisePool.query(
             'SELECT *, DATE_FORMAT(date,"%Y-%m-%d") AS date FROM hours WHERE user_id = ? AND date = ?',[user_id, date]    
@@ -14,13 +14,13 @@ const HourService ={
             return {"status":true,"hours":rows}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false,"message":"error en la consulta horas actual mes"}
         }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
     },
-    "index_hours_month": async function(params){
+    "indexHoursMonth": async function(params){
         const {date, user_id}  = params
         return await promisePool.query(
             'SELECT *,DATE_FORMAT(date,"%d") AS day, DATE_FORMAT(date,"%Y-%m-%d") AS date FROM hours WHERE DATE_FORMAT(date,"%Y-%m") = DATE_FORMAT(?,"%Y-%m") AND user_id = ?',[date,user_id]    
@@ -28,13 +28,13 @@ const HourService ={
             return {"status":true,"hours":rows}
         }).catch((err)=>{
             console.log(err)
-            return {"status": false}
+            return {"status":false,"message":"error en la consulta tiempos por mes"}
         }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
     },
-    "index_hours_between": async function(params){
+    "indexHoursBetween": async function(params){
         const {start, end}  = params
         return await promisePool.query(
             `
@@ -50,13 +50,13 @@ const HourService ={
             return {"status":true,"hours":rows}
         }).catch((err)=>{
             console.log(err)
-            return {"status": false}
+            return {"status":false,"message":"error al consultar registros de tiempos por rango"}
         }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
     },
-    "store_hour": async function(params){
+    "storeHour": async function(params){
         const { project_id, activity_id, hours, date,comments,user_id } = params
         const _date = new Date(date)
         const day = _date.getUTCDate() || date.split("-")[2]
@@ -66,13 +66,13 @@ const HourService ={
             return {"status":true,"hour":{"hours_id":ResultSetHeader.insertId, ...params,"day":day}}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false,"message":"error al guardar un registro de tiempo"}
         }).finally(
            //solo si es necesario
             // await promisePool.end()
         )
     },
-    'update_hour':async function(params){
+    'updateHour':async function(params){
         const {project_id, activity_id, hours, date, comments, user_id, hours_id} = params
         return await promisePool.query("UPDATE hours SET  project_id = ?, activity_id = ?, hours = ?, date = ?, comments = ?, user_id = ?  WHERE hours_id = ?",
         [project_id, activity_id,hours, date, comments, user_id, hours_id])
@@ -80,14 +80,14 @@ const HourService ={
             return {"status":true,"executed":ResultSetHeader.affectedRows}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false, "message":"error al actualizar un registro de tiempo"}
         }
         ).finally(
             //solo si es necesario
             // await promisePool.end()
         )
     },
-    'delete_hour':async function(params){
+    'deleteHour':async function(params){
         const { hours_id } = params
         return await promisePool.query(
             "DELETE FROM hours WHERE hours_id = ?",[hours_id]
@@ -95,7 +95,7 @@ const HourService ={
             return {"status":true,"executed":ResultSetHeader.affectedRows}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false}
+            return {"status":false,"message":"error al eliminar un registro de tiempo"}
         }).finally(
             //solo si es necesario
             // await promisePool.end()

@@ -33,7 +33,7 @@ export class Users{
     }
 
     async store(){
-        return  await UserService.store_user(this.user)
+        return await UserService.storeUser(this.user)
     }
 
     fill(body){
@@ -61,15 +61,7 @@ export class Users{
     }
 
     static async indexUsers(req){
-
-        const result = await UserService.index_users(req.body)
-       
-        if(result.status){
-            return result
-        }else{
-            return {"status":false,"message":"error en la consulta usuarios"}
-    
-        }
+        return await UserService.indexUsers(req.body)
     }
 
     static async storeUser(req){
@@ -90,19 +82,9 @@ export class Users{
 
         if (req.body.password.length){
             req.body.password = BCRYPT.generate(req.body.password)
-            const result = await UserService.update_full(req.body)
-            if(result.status){
-                return result
-            }else{
-                return {"status":false,"message":"error en la consulta actualizar usuario completo"}
-            }
+            return await UserService.updateFull(req.body)
         }else{
-            const result =  await UserService.update(req.body)
-            if(result.status){
-                return result
-            }else{
-                return {"status":false,"message":"error en la consulta actualizar usuario"}
-            }
+            return await UserService.update(req.body)
         }
     }
 }

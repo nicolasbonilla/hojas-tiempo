@@ -6,7 +6,7 @@ export class Aplication {
 
     static async checkToken (req){
 
-        const result = await UserService.index_id({"user_id": req.authenticated.validation.user_id})
+        const result = await UserService.indexId({"user_id": req.authenticated.validation.user_id})
         if(result.user.user_id){
             const permissions = result.user.permissions.split(",").map((p)=>{
                 try {
@@ -25,7 +25,7 @@ export class Aplication {
 
     static async login (req){
 
-        const result = await UserService.index_email(req.body)
+        const result = await UserService.indexEmail(req.body)
         
         if(!result.user.user_id){
             return  {'error':400,'message': 'Usuario no encontrado!'}
