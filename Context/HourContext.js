@@ -1,5 +1,6 @@
 import HourService from "../Services/HourService.js"
-
+import RoutineService from "../Services/RoutineService.js"
+import RoutineUtility from "../utilities/routine.js"
 export class Hours {
 
     constructor(){
@@ -66,12 +67,14 @@ export class Hours {
     static async indexHours(req){
 
         req.body.user_id = req.authenticated.validation.user_id
-        const result = await HourService.index_hours(req.body)
+        const resultTimes = await HourService.index_hours(req.body)
+        const resultRoutines = await RoutineService.indexRoutinesRange(req.body)
        
-        if(result.status){
-            return result
+        if(resultTimes.status){
+            const routines = resultRoutines.status === true ? resultRoutines.routines : []
+            return {"status":true, "hours": resultTimes.hours, "routines": RoutineUtility.validate(routines,req.body.date)}
         }else{
-            return {"status":false,"message":"error en la consulta horas"}
+            return {"status":false,"message":"error en la consulta horas actual mes"}
         }
     }
 

@@ -16,6 +16,7 @@ import clientsRouter from './routes/ClientsRouter.js'
 import jobsRouter from './routes/JobsRouter.js'
 import teamsRouter from './routes/TeamRouter.js'
 import reportRouter from './routes/ReportRouter.js'
+import routineRouter from './routes/RoutineRouter.js'
 
 var app = express()
 var _dirname = './' //ruta directorio actual
@@ -29,8 +30,8 @@ const _cors = cors({
 })
 
 // view engine setup
-app.set('views', './views')
-app.set('view engine', 'ejs')
+app.set('views','./views')
+app.set('view engine','ejs')
 
 app.use(logger('dev'))
 app.use(express.json())
@@ -51,6 +52,7 @@ app.use('/api/clients', clientsRouter)
 app.use('/api/jobs', jobsRouter)
 app.use('/api/teams', teamsRouter)
 app.use('/api/report', reportRouter)
+app.use('/api/routine', routineRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

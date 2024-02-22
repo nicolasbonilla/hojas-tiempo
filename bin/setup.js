@@ -7,9 +7,7 @@
     import app from '../app.js'
     import debug from 'debug'//('node-express:server')
     import { createServer } from 'http'
-    import Colors from 'colors'
-
-
+    
     /**
      * Create HTTP server.
      */
@@ -25,7 +23,7 @@
         server.listen(Config.get('app','port'))
     }
 
-    console.log( '>> AxonTime: iniciado en el puerto: ' + Colors.bgMagenta(Config.get('app','port'))+' <<' )
+    console.log( '>> AxonTime: iniciado en el puerto: ' + Config.get('app','port')+' <<' )
     server.on('error', onError)
     server.on('listening', onListening)
 
