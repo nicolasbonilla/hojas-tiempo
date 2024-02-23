@@ -5,7 +5,21 @@ import mysql_method from "../db/mysql.js"
 const promisePool = mysql_method.pool.promise()
 
 const RoutineService ={
-
+    
+    "indexRoutinesUser": async function(params){
+        const { user_id }  = params
+        return await promisePool.query(
+            'SELECT * FROM routine WHERE user_id = ?',[user_id]
+        ).then(([rows,fields])=>{
+            return {"status":true,"routines":rows}
+        }).catch((err)=>{
+            console.log(err)
+            return {"status":false,"message":"error al consultar rutinas por usuario"}
+        }).finally(
+           //solo si es necesario
+            // await promisePool.end()
+        )
+    },
     "indexRoutinesRange": async function(params){
         const {date, user_id}  = params
         return await promisePool.query(
@@ -14,7 +28,7 @@ const RoutineService ={
             return {"status":true,"routines":rows}
         }).catch((err)=>{
             console.log(err)
-            return {"status":false, "message": "error al consultar rutinas por rango de tiempo"}
+            return {"status":false,"message":"error al consultar rutinas por rango de tiempo y usuario"}
         }).finally(
            //solo si es necesario
             // await promisePool.end()
