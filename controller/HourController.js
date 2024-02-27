@@ -27,9 +27,10 @@ export class HourController {
         try {
             
             let request_validator = Utilities.validatorRequest(req.body,[
-                'date',
-                'old',
-                'prev',
+                'monthCurrentStart',
+                'monthCurrentEnd',
+                'monthPrevStart',
+                'monthOldStart'
             ])
 
             if(!request_validator.status){

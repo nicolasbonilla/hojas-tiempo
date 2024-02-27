@@ -46,21 +46,28 @@ export class Hours {
     }
 
     static async indexHoursMonth (req){
-        
+
         req.body.user_id = req.authenticated.validation.user_id
+        
+        req.body = {...req.body, date: req.body.monthCurrentStart }
         const result = await HourService.indexHoursMonth(req.body)
        
-        req.body = {...req.body, date: req.body.old }
-        const olds = await HourService.indexHoursMonth(req.body)
-        
-        req.body = {...req.body, date: req.body.prev }
+        req.body = {...req.body, date: req.body.monthPrevStart }
         const prevs = await HourService.indexHoursMonth(req.body)
-       
-        if(!result.status || !olds.status || !prevs.status ){
+        
+        req.body = {...req.body, date: req.body.monthOldStart }
+        const olds = await HourService.indexHoursMonth(req.body)
+
+        req.body = {...req.body,start: req.body.monthCurrentStart, end: req.body.monthCurrentEnd }
+        const resultRoutines = await RoutineService.indexRoutinesRangeMonth(req.body)
+        
+        const routines = resultRoutines.status === true ? resultRoutines.routines : []
+
+        if(!result.status || !prevs.status || !olds.status ){
             return {"status":false,"message":"error en la consulta de tiempos por mes"}
         }
         
-        return {"status":true,"hours": result.hours, "old": olds.hours, "prev": prevs.hours }
+        return {"status":true,"hours":result.hours,"old":olds.hours,"prev":prevs.hours,"routines":routines}
 
     }
 

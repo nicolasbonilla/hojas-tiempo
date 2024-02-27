@@ -23,7 +23,7 @@ const HourService ={
     "indexHoursMonth": async function(params){
         const {date, user_id}  = params
         return await promisePool.query(
-            'SELECT *,DATE_FORMAT(date,"%d") AS day, DATE_FORMAT(date,"%Y-%m-%d") AS date FROM hours WHERE DATE_FORMAT(date,"%Y-%m") = DATE_FORMAT(?,"%Y-%m") AND user_id = ?',[date,user_id]    
+            'SELECT *, DATE_FORMAT(date,"%Y-%m-%d") AS date FROM hours WHERE DATE_FORMAT(date,"%Y-%m") = DATE_FORMAT(?,"%Y-%m") AND user_id = ?',[date,user_id]    
         ).then(([rows,fields])=>{
             return {"status":true,"hours":rows}
         }).catch((err)=>{
