@@ -12,7 +12,6 @@ const concurrencesDaysRoutinesConvention = {
 const routine = {
 
     validateRangeTime: function(arrayRoutines,date){
-        
         const _routinesFiltered = []
         const _date = DateTime.fromFormat(date,"yyyy/MM/dd").setZone("America/Bogota")
 
