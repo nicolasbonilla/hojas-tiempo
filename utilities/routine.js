@@ -13,19 +13,19 @@ const routine = {
 
     validateRangeTime: function(arrayRoutines,date){
         const _routinesFiltered = []
-        const _date = DateTime.fromFormat(date,"yyyy/MM/dd").setZone("America/Bogota")
-
+        const _dateUTC = DateTime.fromFormat(date,"yyyy/MM/dd").toUTC()
+        
         for(let index = 0; index < arrayRoutines.length; index++){
 
             const element = arrayRoutines[index]
             const routineObject = element.routine
             const { routine, every, activity_id, project_id, hours } = routineObject
-            
-            const _dateStartRoutine = DateTime.fromJSDate(new Date(element.start))
 
+            const _dateStartRoutine = DateTime.fromJSDate(new Date(element.start)).toUTC()
+            
             // repetir cada día // routines[0].id // every 1-7
             if(routine === 1){
-                const differenceDays = _date.diff(_dateStartRoutine,'days')
+                const differenceDays = _dateUTC.diff(_dateStartRoutine,'days')
                 if((differenceDays.days % every) === 0){
                     _routinesFiltered.push(element)
                     continue
@@ -34,8 +34,8 @@ const routine = {
 
             // repetir dias en cada semana // routines[1].id // every 1-4
             if(routine === 2){
-                const differenceWeeks = _date.diff(_dateStartRoutine,'weeks')
-                if(( Math.round(differenceWeeks.weeks) % every) === 0 && routineObject.days.includes(_date.weekday)){
+                const differenceWeeks = _dateUTC.diff(_dateStartRoutine,'weeks')
+                if(( Math.round(differenceWeeks.weeks) % every) === 0 && routineObject.days.includes(_dateUTC.weekday)){
                     _routinesFiltered.push(element)
                     continue
                 }
@@ -44,14 +44,14 @@ const routine = {
             // repetir cada mes // routines[2].id // // every 1-12
             if(routine === 3){
 
-                const differenceMonths = _date.diff(_dateStartRoutine,'months')
+                const differenceMonths = _dateUTC.diff(_dateStartRoutine,'months')
                 if((Math.floor(differenceMonths.months) % every) === 0){
                     
                     let concurrence =  routineObject.concurrence // 1-5 // primer-último
                     // primer lunes-viernes del mes
-                    let firstDay = _date.startOf("month").plus({ days: (concurrencesDaysRoutinesConvention[routineObject.day].numRef - _date.startOf("month").weekday) % 7 })
+                    let firstDay = _dateUTC.startOf("month").plus({ days: (concurrencesDaysRoutinesConvention[routineObject.day].numRef - _dateUTC.startOf("month").weekday) % 7 })
                     let allDays = []
-                    while(firstDay.month === _date.month){
+                    while(firstDay.month === _dateUTC.month){
                         // Añadir el dia al array
                         allDays.push(firstDay)
                         // Sumar 7 días para obtener el siguiente dia
@@ -60,7 +60,7 @@ const routine = {
                     
                     let routineDaySetting = concurrence == 5 ? allDays[allDays.length-1] : allDays[concurrence-1]
                     
-                    if( _date.equals(routineDaySetting)){
+                    if( _dateUTC.equals(routineDaySetting)){
                         _routinesFiltered.push(element)
                     }
                 }
