@@ -36,8 +36,9 @@ const RoutineService ={
     },
     "indexRoutinesRangeMonth": async function(params){
         const {start,end,user_id}  = params
+
         return await promisePool.query(
-            'SELECT routine_id, user_id, DATE_FORMAT(start,"%Y-%m-%d") AS start, DATE_FORMAT(end,"%Y-%m-%d") AS end, routine FROM routine WHERE ((end BETWEEN DATE(?) AND DATE(?)) OR (start BETWEEN DATE(?) AND DATE(?))) AND user_id = ?',[start,end,start,end,user_id]
+            'SELECT routine_id, user_id, DATE_FORMAT(start,"%Y-%m-%d") AS start, DATE_FORMAT(end,"%Y-%m-%d") AS end, routine FROM routine WHERE ((end >= ? AND start <= ?) OR (start >= ? AND end <= ?)) and user_id = ?',[start,end,start,end,user_id]
         ).then(([rows,fields])=>{
             return {"status":true,"routines":rows}
         }).catch((err)=>{
