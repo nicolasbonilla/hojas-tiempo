@@ -38,7 +38,7 @@ const RoutineService ={
         const {start,end,user_id}  = params
 
         return await promisePool.query(
-            'SELECT routine_id, user_id, DATE_FORMAT(start,"%Y-%m-%d") AS start, DATE_FORMAT(end,"%Y-%m-%d") AS end, routine FROM routine WHERE ((end >= ? AND start <= ?) OR (start >= ? AND end <= ?)) and user_id = ?',[start,end,start,end,user_id]
+            'SELECT routine_id, DATE_FORMAT(start,"%Y-%m-%d") AS start, DATE_FORMAT(end,"%Y-%m-%d") AS end, routine FROM routine WHERE ((end >= ? AND start <= ?) OR (start >= ? AND end <= ?)) and user_id = ?',[start,end,start,end,user_id]
         ).then(([rows,fields])=>{
             return {"status":true,"routines":rows}
         }).catch((err)=>{
@@ -56,7 +56,7 @@ const RoutineService ={
         return await promisePool.query(
             'INSERT INTO routine (start, end, routine,user_id) VALUES (?,?,?,?)',[start,end,JSON.stringify(routine),user_id]
         ).then(([ResultSetHeader])=>{
-            return {"status":true,"routine":{"routine_id":ResultSetHeader.insertId, ...params}}
+            return {"status":true,"routine":{"routine_id":ResultSetHeader.insertId,"start":start,"end":end,"routine":routine}}
         }).catch((err)=>{
             console.log(err)
             return {"status":false,message:"error al guardar una rutina"}

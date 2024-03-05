@@ -1,5 +1,4 @@
 import { DateTime } from "luxon"
-import { times, routines, daysRoutinesDefault, concurrencesDaysRoutines, concurrencesRoutines } from '../enums/routine.js'
 
 const concurrencesDaysRoutinesConvention = {
     1:{"numRef":8,"name":"Lunes"},
@@ -34,7 +33,9 @@ const routine = {
 
             // repetir dias en cada semana // routines[1].id // every 1-4
             if(routine === 2){
-                const differenceWeeks = _dateUTC.diff(_dateStartRoutine,'weeks')
+                // es oportuno establecer el inicio de semana para hacer la comprobación absoluta
+                const startWeek = _dateUTC.startOf("week")
+                const differenceWeeks = startWeek.diff(_dateStartRoutine,'weeks')
                 if(( Math.round(differenceWeeks.weeks) % every) === 0 && routineObject.days.includes(_dateUTC.weekday)){
                     _routinesFiltered.push(element)
                     continue

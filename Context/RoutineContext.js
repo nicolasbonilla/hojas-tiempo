@@ -1,5 +1,7 @@
 import RoutineService from "../Services/RoutineService.js"
 import Config from "../config/index.js"
+import { DateTime } from "luxon"
+
 export class Routine {
 
     static async storeRoutine(req){
@@ -11,7 +13,16 @@ export class Routine {
             return {"status":false,"message":"¡Demasiadas repeticiones activas!"}
         }
 
-        return await RoutineService.storeRoutine(req.body)
+        const result = await RoutineService.storeRoutine(req.body)
+        if(!result.status){
+            return result
+        }
+
+        let _start =  DateTime.fromFormat(result.routine.start,"yyyy/MM/dd").toFormat("yyyy-MM-dd")
+        let _end =  DateTime.fromFormat(result.routine.end,"yyyy/MM/dd").toFormat("yyyy-MM-dd")
+
+        return {"status":true,"routine":{...result.routine,"start":_start,"end":_end}}
+    
     }
 
     static async deleteRoutine(req){

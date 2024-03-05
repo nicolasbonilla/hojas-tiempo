@@ -1,4 +1,26 @@
-export const times = [
+// esta es una copia de la configuración en frontend para la definión de una rutina
+
+// opción intervalo "cada" para día
+export const timesDay = [
+    {"id":1,"name":1},
+    {"id":2,"name":2},
+    {"id":3,"name":3},
+    {"id":4,"name":4},
+    {"id":5,"name":5},
+    {"id":6,"name":6},
+    {"id":7,"name":7}
+]
+
+// opción intervalo "cada" para semana
+export const timesWeek = [
+    {"id":1,"name":1},
+    {"id":2,"name":2},
+    {"id":3,"name":3},
+    {"id":4,"name":4}
+]
+
+// opción intervalo "cada" para mes
+export const timesMonth = [
     {"id":1,"name":1},
     {"id":2,"name":2},
     {"id":3,"name":3},
@@ -7,15 +29,20 @@ export const times = [
     {"id":6,"name":6},
     {"id":7,"name":7},
     {"id":8,"name":8},
-    {"id":9,"name":9}
+    {"id":9,"name":9},
+    {"id":10,"name":10},
+    {"id":11,"name":11},
+    {"id":12,"name":12}
 ]
 
+// tipos de rutinas
 export const routines = [
     {"id":1,"name":"Día"},
     {"id":2,"name":"Semana"},
     {"id":3,"name":"Mes"}
 ]
 
+// opciones de dias cuando es rutina tipo 2 "semana"
 export const daysRoutinesDefault = [
     {"id":1,"name":"L","status":true},
     {"id":2,"name":"M","status":true},
@@ -24,14 +51,16 @@ export const daysRoutinesDefault = [
     {"id":5,"name":"V","status":false}
 ]
 
+// opciones del "dia" cuando es rutina tipo 3 "mes"
 export const concurrencesDaysRoutines = [
     {"id":1,"name":"Lunes"},
     {"id":2,"name":"Martes"},
-    {"id":3,"name":"Miercoles"},
+    {"id":3,"name":"Miércoles"},
     {"id":4,"name":"Jueves"},
     {"id":5,"name":"Viernes"}
 ]
 
+// opciones de "ocurrencia" cuando es rutina tipo 3 "mes"
 export const concurrencesRoutines = [
     {"id":1,"name":"Primer"},
     {"id":2,"name":"Segundo"},
