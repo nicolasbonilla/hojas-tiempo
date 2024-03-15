@@ -8,7 +8,7 @@ const UserService ={
 
     'indexUsers':async function(){
 
-        return await promisePool.query("SELECT user_id,email,name,DATE_FORMAT(date_of_admission,'%Y/%m/%d') AS date_of_admission, work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id, CASE TRUE WHEN TRUE THEN '' END AS password FROM users")
+        return await promisePool.query("SELECT user_id,email,ID,name,DATE_FORMAT(date_of_admission,'%Y/%m/%d') AS date_of_admission, work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id, CASE TRUE WHEN TRUE THEN '' END AS password FROM users")
         .then(([rows,fields])=>{
             return {"status":true,"users":rows}
         }).catch((err)=>{

@@ -59,6 +59,7 @@ export class UsersController{
                 'user_id',
                 'email',
                 'password',
+                "ID",
                 'name',
                 'date_of_admission',
                 'work_days_id',
