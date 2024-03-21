@@ -7,18 +7,24 @@ import { DateTime } from "luxon"
 import { enumLetters,enumMonthNumbers } from "../enums/index.js"
 export class Report {
 
-    static async ReportHoursXlsxRangeFull(req){
+    static async ReportHoursXlsxRange(req){
+
+        // obtenemos rango de meses separados [{"start":"2024-01-01","end":"2024-01-31"},{"start":"2024-02-01","end":"2024-02-29"}]
         const monthsRanges = ULuxon.getMonthsInRange(req.body)
+       
+        // obtenemos festivos del año teniendo en cuenta fecha inicial del rango
         const holidaysResult = await HolidayService.indexHolidays(req.body.start)
         if(!holidaysResult.status){
             return holidaysResult
         }
 
+        // añadimos a cada uno de los rangos de fecha(meses) resultantes las horas ideales de trabajo clave "idealHours"
         const _monthsRangesHours = []
         for (let index = 0; index < monthsRanges.length; index++) {
             _monthsRangesHours.push(ULuxon.getHoursInMonth(monthsRanges[index],holidaysResult.holidays))
         }
         
+        // ejemplo de un reporte finalizado
         let example_reports = [
             {
                 Area: 'Innovación',
@@ -30,24 +36,28 @@ export class Report {
                 cost_center: 'Software',
                 Activity: 'Documentación',
                 months:[
-                    // representan a un filtro con tres meses selccionados
+                    // ejemplo representando a un filtro con tres meses seleccionados
                     {"T":9,"V":45000},{"T":10,"V":50000},{"T":1,"V":5000}
                 ]
             }
         ]
 
         let reports = {}
-
+        // consultamos las horas por cada rango de mes resultante y hacemos calculo de horas por cada consulta 
         for(const range of _monthsRangesHours){
             
+            // consulta por mes especifico
             const {result,report} = await ReportService.ReportXlsxRange(range)
             
             for(let index = 0; index < report.length; index++){
                 
                 const _element = report[index]
+                // en este caso se usan los id de usuario, proyecto y actividad para usar como identificador a un elemento de objeto y de este modo interactuar con solo ese objeto
+                // si la propiedad ya exite se interactua con esa propiedad de lo contrario se crea esa propiedad
+
                 let currentElement = reports[`${_element.UserId}${_element.ProjectId}${_element.ActivityId}`]
                 if(currentElement != undefined){
-                    // si hay un registro debemos agregar el siguiente mes con su valor en horas
+                    // si ya existe la propiedad debemos agregar en la clave "months" el actual mes(objeto) con su cantidad y valor en horas teniendo en cuanta el salario de ese mes y el "idealHours"
                     currentElement.months = [ ...currentElement.months, {"T":_element.Hours,"V": (_element.Salary/range.idealHours)*_element.Hours }]
                 }else{
 
@@ -67,16 +77,15 @@ export class Report {
 
             }
 
-            // de cada mes
         }
-        
+        // creamos el objeto parametro final para generar el reporte
         const _objectReport = {
             ranges: _monthsRangesHours,
             reports: Object.values(reports),
             start: req.body.start,
             end: req.body.end
         }
-        
+
         try {
             //return {"status":false,"message":"respuesta intervenida"}
             return await this.generateFileXlsxReportInMonths(_objectReport)
@@ -86,9 +95,8 @@ export class Report {
 
     }
 
-    static async generateFileXlsxReportInMonths(_reports){
-        const { ranges, reports, start, end } = _reports
-        
+    static async generateFileXlsxReportInMonths(_report){
+        const { ranges, reports, start, end } = _report
 
         const workbook = await XlsxPopulate.fromBlankAsync()
         
@@ -110,7 +118,6 @@ export class Report {
 
         // se añaden las celdas cabecera según los meses seleccionados
         for(const item of ranges){
-           
             const LetterHours = Utilities.getNextLetterColumn(latestLetter)
             // se modifica variable control de letra siguiente
             latestLetter = Utilities.getNextLetterColumn(LetterHours)
@@ -144,6 +151,7 @@ export class Report {
         // se construye una fila por cada registro en reporte
         for(let _index = 0; _index < reports.length; _index++){
             const element = reports[_index]
+            
             workbook.sheet(0).cell(`A${_index+2}`).value(element.Area)
             workbook.sheet(0).cell(`B${_index+2}`).value(element.Name)
             workbook.sheet(0).cell(`C${_index+2}`).value(element.ID)
@@ -176,12 +184,13 @@ export class Report {
             const totalValueV = element.months.reduce((total,t)=> total+t.V,0)
             workbook.sheet(0).cell(`${latestLetter}${_index+2}`).value(totalValueV)
             latestLetter = "H"
-        }
 
+        }
         return {"status":true,report:await workbook.outputAsync()}
     }
 
-    static async ReportHoursXlsxRange(req){
+    // no se usa #############################
+    static async _ReportHoursXlsxRange(req){
         
         const holidays = [
             {"id":1,"date": "2024-01-01"},
@@ -235,7 +244,8 @@ export class Report {
 
     }
 
-    static async generateReportHoursXlsx(result,_range,hours){
+    // no se usa ##############################################
+    static async _generateReportHoursXlsx(result,_range,hours){
 
         const { status, report } = result
 

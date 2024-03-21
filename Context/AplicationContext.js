@@ -1,6 +1,7 @@
 import UserService from "../Services/UserService.js"
 import BCRYPT from "../utilities/bcrypt.js"
 import JWT from "../utilities/jwt.js"
+import HolidayService from "../Services/HolidayService.js"
 
 export class Aplication {
 
@@ -28,7 +29,7 @@ export class Aplication {
         const result = await UserService.indexEmail(req.body)
         
         if(!result.user.user_id){
-            return  {'error':400,'message': 'Usuario no encontrado!'}
+            return {"error":400,"message":"Usuario no encontrado!"}
         }
 
         const validacion_password = BCRYPT.check(req.body.password, result.user.password);
@@ -45,12 +46,15 @@ export class Aplication {
                 }
             })
             delete result.user.password
-            const user = { ...result.user, "permissions": permissions }
-            return {"user": user, "token":token}
+            const user = { ...result.user,"permissions":permissions}
+            return {"user":user,"token":token}
                
         }else{
-            return  {'error':401 ,'message': 'Contraseña incorrecta!'}
+            return {"error":401,"message":"Contraseña incorrecta!"}
         }
     }
 
+    static async indexHolidays (req){
+        return await HolidayService.indexHolidays(req.body.date)
+    }
 }

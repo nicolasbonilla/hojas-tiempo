@@ -24,12 +24,25 @@ export class AplicationController {
                 'email',
                 'password'
             ])
-
-            if(!request_validator.status){
-                return res.status(400).json(request_validator)
-            }
-
+            if(!request_validator.status){ return res.status(400).json(request_validator)}
             const result = await Aplication.login(req)
+            return res.json(result)
+        }
+        catch (error) {
+            return res.status(500).json({ "error": 500, "message": error.message })
+        }
+
+    }
+
+    static async indexHolidays(req,res,next){
+
+        try {
+            
+            let request_validator = Utilities.validatorRequest(req.body,[
+                'date',
+            ])
+            if(!request_validator.status){ return res.status(400).json(request_validator)}
+            const result = await Aplication.indexHolidays(req)
             return res.json(result)
         }
         catch (error) {
