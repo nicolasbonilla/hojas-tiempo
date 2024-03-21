@@ -1,4 +1,5 @@
 import ReportService from "../Services/ReportService.js"
+import HolidayService from "../Services/HolidayService.js"
 import XlsxPopulate from "xlsx-populate"
 import ULuxon from "../utilities/luxon.js"
 import Utilities from "../utilities/index.js"
@@ -6,10 +7,19 @@ import { DateTime } from "luxon"
 import { enumLetters,enumMonthNumbers } from "../enums/index.js"
 export class Report {
 
-    static async ReportXlsxRangeFull(req){
+    static async ReportHoursXlsxRangeFull(req){
         const monthsRanges = ULuxon.getMonthsInRange(req.body)
+        const holidaysResult = await HolidayService.indexHolidays(req.body.start)
+        if(!holidaysResult.status){
+            return holidaysResult
+        }
 
-        let reports = [
+        const _monthsRangesHours = []
+        for (let index = 0; index < monthsRanges.length; index++) {
+            _monthsRangesHours.push(ULuxon.getHoursInMonth(monthsRanges[index],holidaysResult.holidays))
+        }
+        
+        let example_reports = [
             {
                 Area: 'Innovación',
                 ID: 1010245162,
@@ -20,57 +30,70 @@ export class Report {
                 cost_center: 'Software',
                 Activity: 'Documentación',
                 months:[
+                    // representan a un filtro con tres meses selccionados
                     {"T":9,"V":45000},{"T":10,"V":50000},{"T":1,"V":5000}
-                ],
-                TT: 19,
-                CT: 95000
+                ]
             }
         ]
 
-        const _reports = {
-            ranges: monthsRanges ,
-            reports:reports
-        }
+        let reports = {}
 
-        for(const range of monthsRanges){
+        for(const range of _monthsRangesHours){
             
-            const result = await ReportService.indexReportXlsxRange(range)
+            const {result,report} = await ReportService.ReportXlsxRange(range)
             
+            for(let index = 0; index < report.length; index++){
+                
+                const _element = report[index]
+                let currentElement = reports[`${_element.UserId}${_element.ProjectId}${_element.ActivityId}`]
+                if(currentElement != undefined){
+                    // si hay un registro debemos agregar el siguiente mes con su valor en horas
+                    currentElement.months = [ ...currentElement.months, {"T":_element.Hours,"V": (_element.Salary/range.idealHours)*_element.Hours }]
+                }else{
 
+                    reports[`${_element.UserId}${_element.ProjectId}${_element.ActivityId}`] = {
+                        Area: _element.Area,
+                        ID: _element.ID,
+                        Name: _element.Name,
+                        JobTitle: _element.JobTitle ,
+                        Code: _element.Code,
+                        Project: _element.Project,
+                        CostCenter: _element.CostCenter,
+                        Activity: _element.Activity,
+                        months:[{"T":_element.Hours,"V": (_element.Salary/range.idealHours)*_element.Hours }],
+                    }
+
+                }
+
+            }
+
+            // de cada mes
         }
-
+        
+        const _objectReport = {
+            ranges: _monthsRangesHours,
+            reports: Object.values(reports),
+            start: req.body.start,
+            end: req.body.end
+        }
+        
         try {
             //return {"status":false,"message":"respuesta intervenida"}
-            return await this.generateFileXlsxReportInMonths(_reports,req.body)
+            return await this.generateFileXlsxReportInMonths(_objectReport)
         } catch(error){
             return {"status":false,"message":"error al generar reporte excel"}
         }
 
     }
 
-    static async generateFileXlsxReportInMonths(_reports,_range){
-
-        // reporte para pruebas
-        let reportTest = [
-            {
-                Area: 'Innovación', // Área
-                ID: 1234567890,
-                Name: 'ALISON JULIANNA MORALES ANGULO', // Nombre del colaborador
-                Job_title: 'Líder de innovación', // Cargo del colaborador
-                Project: 'INNOVACIÓN', // Nombre del proyecto
-                cost_center: 'Axon Group', // Centro de costo
-                Activity: 'Reuniones', // Nombre de la actividad
-                Total_hours: '27',// TTotal
-                Total: '299999.9997', // $Total
-                Salary: 2000000 // salario
-            }
-        ]
-        const { ranges, reports } = _reports
+    static async generateFileXlsxReportInMonths(_reports){
+        const { ranges, reports, start, end } = _reports
+        
 
         const workbook = await XlsxPopulate.fromBlankAsync()
         
         // nombre de la hoja 0
-        workbook.sheet(0).name(`${_range.start}_${_range.end}`)
+        workbook.sheet(0).name(`${start}_${end}`)
 
         // construcción cabecera ################################
         workbook.sheet(0).cell("A1").style({fill:"c6e0b4",fontSize:12,verticalAlignment:"center",horizontalAlignment:"left",border:true}).value("Área")
@@ -87,6 +110,7 @@ export class Report {
 
         // se añaden las celdas cabecera según los meses seleccionados
         for(const item of ranges){
+           
             const LetterHours = Utilities.getNextLetterColumn(latestLetter)
             // se modifica variable control de letra siguiente
             latestLetter = Utilities.getNextLetterColumn(LetterHours)
@@ -123,29 +147,35 @@ export class Report {
             workbook.sheet(0).cell(`A${_index+2}`).value(element.Area)
             workbook.sheet(0).cell(`B${_index+2}`).value(element.Name)
             workbook.sheet(0).cell(`C${_index+2}`).value(element.ID)
-            workbook.sheet(0).cell(`D${_index+2}`).value(element.Job_title)
+            workbook.sheet(0).cell(`D${_index+2}`).value(element.JobTitle)
             workbook.sheet(0).cell(`E${_index+2}`).value(element.Code)
             workbook.sheet(0).cell(`F${_index+2}`).value(element.Project)
-            workbook.sheet(0).cell(`G${_index+2}`).value(element.cost_center)
+            workbook.sheet(0).cell(`G${_index+2}`).value(element.CostCenter)
             workbook.sheet(0).cell(`H${_index+2}`).value(element.Activity)
    
             let addColumns = ranges.length
-            
+
             // se añaden las celdas según los meses seleccionados y su valor
             for(let index=0;index < addColumns;index++){
-                let Tvalue = Utilities.getNextLetterColumn(latestLetter)
-                workbook.sheet(0).cell(`${Tvalue}${_index+2}`).value(Number(element.months[index].T))
-                latestLetter = Utilities.getNextLetterColumn(Tvalue)
-                console.log("letra 2",latestLetter)
-                workbook.sheet(0).cell(`${latestLetter}${_index+2}`).value(Number(element.months[index].V))
+                
+                let letterValueT = Utilities.getNextLetterColumn(latestLetter)
+                const valueT = element.months[index] || {"T":0}
+                workbook.sheet(0).cell(`${letterValueT}${_index+2}`).value(valueT.T)
+                latestLetter = Utilities.getNextLetterColumn(letterValueT)
+                const valueV = element.months[index] || {"V":0}
+                workbook.sheet(0).cell(`${latestLetter}${_index+2}`).value(valueV.V)
+
             }
 
             // se añaden las celdas para los totales
-           let TTotaLetter = Utilities.getNextLetterColumn(latestLetter)
-           workbook.sheet(0).cell(`${TTotaLetter}${_index+2}`).value(Number(element.TT))
-           latestLetter = Utilities.getNextLetterColumn(TTotaLetter)
-           workbook.sheet(0).cell(`${latestLetter}${_index+2}`).value(Number(element.CT))
-           latestLetter = "H"
+            let TTotaLetter = Utilities.getNextLetterColumn(latestLetter)
+            const totalValueT = element.months.reduce((total,t)=> total+t.T,0)
+            workbook.sheet(0).cell(`${TTotaLetter}${_index+2}`).value(totalValueT) 
+            latestLetter = Utilities.getNextLetterColumn(TTotaLetter)
+           
+            const totalValueV = element.months.reduce((total,t)=> total+t.V,0)
+            workbook.sheet(0).cell(`${latestLetter}${_index+2}`).value(totalValueV)
+            latestLetter = "H"
         }
 
         return {"status":true,report:await workbook.outputAsync()}

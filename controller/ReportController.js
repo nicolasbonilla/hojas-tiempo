@@ -4,7 +4,7 @@ import Utilities from "../utilities/index.js"
 
 export class ReportController {
 
-    static async ReportXlsxRangeFull(req,res,next){
+    static async ReportHoursXlsxRangeFull(req,res,next){
         try {
 
             let request_validator = Utilities.validatorRequest(req.body,[
@@ -16,7 +16,7 @@ export class ReportController {
                 return res.status(400).json(request_validator)
             }
 
-            const result = await Report.indexReportXlsxRange(req,res)
+            const result = await Report.ReportHoursXlsxRangeFull(req,res)
             
             if(result.status){
                 res.setHeader('Content-Type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
