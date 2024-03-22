@@ -5,8 +5,8 @@ const luxon = {
 
         const { start, end } = range
 
-        const _start = DateTime.fromISO(start).toUTC()
-        const _end = DateTime.fromISO(end).toUTC()
+        const _start = DateTime.fromISO(start)
+        const _end = DateTime.fromISO(end)
         const monthsInRange = []
 
         let currentDate = _start
@@ -18,8 +18,8 @@ const luxon = {
         return monthsInRange
     },
     'getHoursInMonth':(monthRange,holidays)=>{
-        const dateCheckIn = DateTime.fromISO(monthRange.start).toUTC()
-        const dateCheckOut = DateTime.fromISO(monthRange.end).toUTC()
+        const dateCheckIn = DateTime.fromISO(monthRange.start)
+        const dateCheckOut = DateTime.fromISO(monthRange.end)
         const diferenceDays = dateCheckOut.diff(dateCheckIn,["years","months","days"]).as("days")
         let diffDays = 0
         // en el primer ciclo no se añade un día porque el index esta en 0 por tanto sigue siendo el valor inicial del rango de fecha
