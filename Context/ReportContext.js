@@ -28,7 +28,7 @@ export class Report {
         let example_reports = [
             {
                 Area: 'Innovación',
-                ID: 1010245162,
+                ID: 1234567890,
                 Name: 'ALISON JULIANNA MORALES ANGULO',
                 Job_title: 'Líder de innovación',
                 Code: '702',
@@ -43,24 +43,31 @@ export class Report {
         ]
 
         let reports = {}
-        // consultamos las horas por cada rango de mes resultante y hacemos calculo de horas por cada consulta 
-        for(const range of _monthsRangesHours){
-            
-            // consulta por mes especifico
+        // consultamos las horas por cada rango de mes resultante
+        for(const [_index,range] of _monthsRangesHours.entries()){
+            // consulta por mes especifico con total de horas y se obtiene salario de mes actual
             const {result,report} = await ReportService.ReportXlsxRange(range)
-            
             for(let index = 0; index < report.length; index++){
                 
                 const _element = report[index]
                 // en este caso se usan los id de usuario, proyecto y actividad para usar como identificador a un elemento de objeto y de este modo interactuar con solo ese objeto
                 // si la propiedad ya exite se interactua con esa propiedad de lo contrario se crea esa propiedad
-
                 let currentElement = reports[`${_element.UserId}${_element.ProjectId}${_element.ActivityId}`]
+                // ######## alteración de fila existente
                 if(currentElement != undefined){
-                    // si ya existe la propiedad debemos agregar en la clave "months" el actual mes(objeto) con su cantidad y valor en horas teniendo en cuanta el salario de ese mes y el "idealHours"
-                    currentElement.months = [ ...currentElement.months, {"T":_element.Hours,"V": (_element.Salary/range.idealHours)*_element.Hours }]
+                    // si ya existe la propiedad debemos reemplazar en la clave "months" el actual mes(objeto) con su cantidad y valor en horas teniendo en cuanta el salario de ese mes y el "idealHours"
+                    const newMonths = [...currentElement.months] 
+                    newMonths.splice(_index,1,{"T":_element.Hours,"V":(_element.Salary/range.idealHours)*_element.Hours})
+                    currentElement.months = newMonths
                 }else{
-
+                    // ######## construcción de nueva fila
+                    let _months = []
+                    // agregamos los objetos de total y valor horas de todos los meses
+                    for (let indexRange = 0; indexRange < _monthsRangesHours.length; indexRange++) {
+                        _months.push({"T":0,"V":0})
+                    } 
+                    // reemplazamos el objeto valor horas del mes actual
+                    _months.splice(_index,1,{"T":_element.Hours,"V":(_element.Salary/range.idealHours)*_element.Hours})
                     reports[`${_element.UserId}${_element.ProjectId}${_element.ActivityId}`] = {
                         Area: _element.Area,
                         ID: _element.ID,
@@ -70,14 +77,12 @@ export class Report {
                         Project: _element.Project,
                         CostCenter: _element.CostCenter,
                         Activity: _element.Activity,
-                        months:[{"T":_element.Hours,"V": (_element.Salary/range.idealHours)*_element.Hours }],
+                        months: _months
                     }
-
                 }
-
             }
-
         }
+        
         // creamos el objeto parametro final para generar el reporte
         const _objectReport = {
             ranges: _monthsRangesHours,
@@ -87,7 +92,6 @@ export class Report {
         }
 
         try {
-            //return {"status":false,"message":"respuesta intervenida"}
             return await this.generateFileXlsxReportInMonths(_objectReport)
         } catch(error){
             return {"status":false,"message":"error al generar reporte excel"}
@@ -101,7 +105,7 @@ export class Report {
         const workbook = await XlsxPopulate.fromBlankAsync()
         
         // nombre de la hoja 0
-        workbook.sheet(0).name(`${start}_${end}`)
+        workbook.sheet(0).name(`${start}_${ranges[ranges.length-1].end}`)
 
         // construcción cabecera ################################
         workbook.sheet(0).cell("A1").style({fill:"c6e0b4",fontSize:12,verticalAlignment:"center",horizontalAlignment:"left",border:true}).value("Área")
@@ -137,14 +141,39 @@ export class Report {
 
         // ancho y altura de la cebecera
         workbook.sheet(0).row(1).height(20)
-        workbook.sheet(0).column("A").width(18)
+        workbook.sheet(0).column("A").width(6)
         workbook.sheet(0).column("B").width(40)
-        workbook.sheet(0).column("C").width(25)
+        workbook.sheet(0).column("C").width(16)
         workbook.sheet(0).column("D").width(30)
         workbook.sheet(0).column("E").width(15)
         workbook.sheet(0).column("F").width(30)
-        workbook.sheet(0).column("G").width(25)
+        workbook.sheet(0).column("G").width(18)
         workbook.sheet(0).column("H").width(30)
+        workbook.sheet(0).column("I").width(19)
+        workbook.sheet(0).column("J").width(19)
+        workbook.sheet(0).column("K").width(19)
+        workbook.sheet(0).column("L").width(19)
+        workbook.sheet(0).column("M").width(19)
+        workbook.sheet(0).column("N").width(19)
+        workbook.sheet(0).column("O").width(19)
+        workbook.sheet(0).column("P").width(19)
+        workbook.sheet(0).column("Q").width(19)
+        workbook.sheet(0).column("R").width(19)
+        workbook.sheet(0).column("S").width(19)
+        workbook.sheet(0).column("T").width(19)
+        workbook.sheet(0).column("U").width(19)
+        workbook.sheet(0).column("V").width(19)
+        workbook.sheet(0).column("W").width(19)
+        workbook.sheet(0).column("X").width(19)
+        workbook.sheet(0).column("Y").width(19)
+        workbook.sheet(0).column("Z").width(19)
+        workbook.sheet(0).column("AA").width(19)
+        workbook.sheet(0).column("AB").width(19)
+        workbook.sheet(0).column("AC").width(19)
+        workbook.sheet(0).column("AD").width(19)
+        workbook.sheet(0).column("AF").width(19)
+        workbook.sheet(0).column("AG").width(20)
+        workbook.sheet(0).column("AH").width(20)
 
         // construcción cuerpo ################################
 
@@ -165,14 +194,10 @@ export class Report {
 
             // se añaden las celdas según los meses seleccionados y su valor
             for(let index=0;index < addColumns;index++){
-                
                 let letterValueT = Utilities.getNextLetterColumn(latestLetter)
-                const valueT = element.months[index] || {"T":0}
-                workbook.sheet(0).cell(`${letterValueT}${_index+2}`).value(valueT.T)
+                workbook.sheet(0).cell(`${letterValueT}${_index+2}`).value(element.months[index].T)
                 latestLetter = Utilities.getNextLetterColumn(letterValueT)
-                const valueV = element.months[index] || {"V":0}
-                workbook.sheet(0).cell(`${latestLetter}${_index+2}`).value(valueV.V)
-
+                workbook.sheet(0).cell(`${latestLetter}${_index+2}`).value(element.months[index].V)
             }
 
             // se añaden las celdas para los totales
