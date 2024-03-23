@@ -53,8 +53,6 @@ const ReportService ={
     },
     "ReportXlsxRange": async function(params){
         const {start, end }  = params
-        console.log("start", start)
-        console.log("end", end)
         return await promisePool.query(
             `
             SELECT
