@@ -17,6 +17,7 @@ export class Users{
         this.location_id = 0
         this.status_id = 0
         this.active = 0
+        this.ID = 0
         this.phone_number = ''
         this.team_id = 0
     }
@@ -72,7 +73,7 @@ export class Users{
         const result = await _User.store()
         
         if(result.status){
-            return {"status": true,"user": {...result.user,"password":""}  }
+            return {"status":true,"user":{...result.user,"password":""}}
         }else{
             return {"status":false,"message":"error en la consulta guardar usuario"}
         }

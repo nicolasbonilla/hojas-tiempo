@@ -23,6 +23,7 @@ export class UsersController{
             let request_validator = Utilities.validatorRequest(req.body,[
                 'email',
                 'password',
+                'ID',
                 'name',
                 'date_of_admission',
                 'work_days_id',
@@ -59,7 +60,7 @@ export class UsersController{
                 'user_id',
                 'email',
                 'password',
-                "ID",
+                'ID',
                 'name',
                 'date_of_admission',
                 'work_days_id',

@@ -81,11 +81,11 @@ const UserService ={
     },
     "storeUser": async function(params){
 
-        const {email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password} = params
+        const {email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password,ID} = params
 
         return await promisePool.query(
-            'INSERT INTO users (email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-            [email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password]
+            'INSERT INTO users (email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password,ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [email,name,date_of_admission,work_days_id,salary,role_id,job_title_id,area_id,work_modality_id,location_id,status_id,active,phone_number,team_id,password,ID]
         ).then(([ResultSetHeader])=>{
             return {"status":true,"user":{"user_id": ResultSetHeader.insertId,...params }}
         }).catch((err)=>{
@@ -99,9 +99,10 @@ const UserService ={
     },
     'updateFull':async function(params){
 
-        const {team_id, email, password, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id } = params
-        return await promisePool.query("UPDATE users SET team_id = ?, email = ?, password = ?, name = ?, date_of_admission = ?, work_days_id = ?, salary = ?, role_id = ?, job_title_id = ?, area_id = ?, work_modality_id = ?, location_id = ?, status_id = ?, active = ?, phone_number = ? WHERE user_id = ?",
-        [team_id, email, password, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id])
+        const {team_id, email, password, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, ID, user_id } = params
+        // el parametro user_id siempre debe estará de último en el array
+        return await promisePool.query("UPDATE users SET team_id = ?, email = ?, password = ?, name = ?, date_of_admission = ?, work_days_id = ?, salary = ?, role_id = ?, job_title_id = ?, area_id = ?, work_modality_id = ?, location_id = ?, status_id = ?, active = ?, phone_number = ?, ID = ? WHERE user_id = ?",
+        [team_id, email, password, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, ID, user_id])
         .then(([ResultSetHeader])=>{
             return {"status":true,"ejecuciones": ResultSetHeader.affectedRows}
         }).catch((err)=>{
@@ -114,9 +115,10 @@ const UserService ={
     },
     'update':async function(params){
 
-        const {team_id, email, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id } = params
-        return await promisePool.query("UPDATE users SET team_id = ?, email = ?, name = ?, date_of_admission = ?, work_days_id = ?, salary = ?, role_id = ?, job_title_id = ?, area_id = ?, work_modality_id = ?, location_id = ?, status_id = ?, active = ?, phone_number = ? WHERE user_id = ?",
-        [team_id, email, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, user_id])
+        const {team_id, email, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, ID,user_id } = params
+        // el parametro user_id siempre debe estará de último en el array
+        return await promisePool.query("UPDATE users SET team_id = ?, email = ?, name = ?, date_of_admission = ?, work_days_id = ?, salary = ?, role_id = ?, job_title_id = ?, area_id = ?, work_modality_id = ?, location_id = ?, status_id = ?, active = ?, phone_number = ?, ID = ? WHERE user_id = ?",
+        [team_id, email, name, date_of_admission, work_days_id, salary, role_id, job_title_id, area_id, work_modality_id, location_id, status_id, active, phone_number, ID,user_id])
         .then(([ResultSetHeader])=>{
             return {"status":true,"ejecuciones":ResultSetHeader.affectedRows}
         }).catch((err)=>{
